@@ -18,8 +18,8 @@ export function FilterPanel({ products, filters, onFilterChange, isOpen = true, 
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
         categories: true,
         collections: true,
-        colors: true,
-        sizes: true,
+        colors: false,
+        sizes: false,
     })
 
     const toggleSection = (section: string) => {
