@@ -43,7 +43,7 @@ export default function SearchPage() {
                     <Breadcrumb
                         items={[
                             { label: "Home", href: "/home" },
-                            { label: "Search" },
+                            { label: "Shop" },
                         ]}
                     />
                     <h1 className="text-4xl font-bold mb-2">Search Results</h1>
