@@ -17,7 +17,7 @@ export default function ShopPage() {
                 className="ml-8"
                 items={[
                     { label: "Home", href: "/home" },
-                    { label: "Search" },
+                    { label: "Shop" },
                 ]}
             />
             <div className="flex flex-col md:flex-row w-full gap-6 p-6">
