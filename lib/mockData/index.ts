@@ -2,10 +2,12 @@ export interface Category {
     id: string
     name: string
 }
+
 export interface Collection {
     id: string
     name: string
     description: string
+    created_at: string
 }
 
 export const mockCategories: Category[] = [
@@ -28,23 +30,28 @@ export const mockCollections: Collection[] = [
         id: "imani",
         name: "Imani Collection",
         description: "Faith-inspired apparel celebrating Christian values and beliefs",
+        created_at: "2025-07-01T00:00:00Z",
     },
     {
         id: "heritage",
         name: "Heritage Collection",
         description: "Timeless pieces honoring tradition and cultural significance",
+        created_at: "2025-06-01T00:00:00Z",
     },
     {
         id: "modern",
         name: "Modern Collection",
         description: "Contemporary designs for the modern Christian lifestyle",
+        created_at: "2025-05-15T00:00:00Z",
     },
     {
         id: "limited",
         name: "Limited Edition",
         description: "Exclusive pieces available in limited quantities",
+        created_at: "2025-04-15T00:00:00Z",
     },
 ]
+
 export interface Product {
     id: string
     name: string
