@@ -46,8 +46,9 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
                     {/* Left column: Main menu items */}
                     <div className="w-48 py-2 border-r border-border">
                         {items.map((item) => (
-                            <button
+                            <Link
                                 key={item.label}
+                                href={item.href || "#"}
                                 onMouseEnter={() => {
                                     if (item.items && item.items.length > 0) {
                                         setHoveredItem(item.label)
@@ -58,7 +59,7 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
                             >
                                 {item.label}
                                 {item.items && item.items.length > 0 && <ChevronRight className="w-4 h-4 ml-2" />}
-                            </button>
+                            </Link>
                         ))}
                     </div>
 

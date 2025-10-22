@@ -12,10 +12,11 @@ const shopMenuItems = [
     {
         label: "Men",
         items: [
-            { label: "Shirts", href: "/shop/men/shirts" },
+            { label: "Shirts", href: "/shop/men?q=${encodeURIComponent(searchQuery)}" },
             { label: "Pants", href: "/shop/men/pants" },
             { label: "Accessories", href: "/shop/men/accessories" },
         ],
+        href: "/shop/men",
     },
     {
         label: "Women",
@@ -24,6 +25,7 @@ const shopMenuItems = [
             { label: "Tops", href: "/shop/women/tops" },
             { label: "Accessories", href: "/shop/women/accessories" },
         ],
+        href: "/shop/women",
     },
     {
         label: "Unisex",
@@ -32,6 +34,7 @@ const shopMenuItems = [
             { label: "T-Shirts", href: "/shop/unisex/tshirts" },
             { label: "Accessories", href: "/shop/unisex/accessories" },
         ],
+        href: "/shop/unisex",
     },
 ]
 
@@ -42,7 +45,8 @@ const collectionsMenuItems = [
             { label: "Men", href: "/shop/collections/men" },
             { label: "Women", href: "/shop/collections/women" },
             { label: "Unisex", href: "/shop/collections/unisex" },
-        ]
+        ],
+        href: "/collections/imani",
     },
     {
         label: "Heritage Collection",
