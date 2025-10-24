@@ -134,7 +134,7 @@ export function FilterPanel({ products, filters, onFilterChange, isOpen = true, 
             )}
 
             {/* Desktop Sidebar - visible only on medium screens and up */}
-            <div className="hidden md:block w-full max-w-xs bg-card border-r border-border p-4 h-fit sticky top-4">
+            <div className="hidden md:block w-full max-w-xs bg-card border-r border-border p-4 h-[100dvh] sticky top-4 overflow-y-auto">
                 {filterContent}
             </div>
         </>
