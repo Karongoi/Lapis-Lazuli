@@ -6,7 +6,7 @@ export default function LoadingSkeleton() {
                 {[...Array(5)].map((_, i) => (
                     <div
                         key={i}
-                        className="h-8 w-2 bg-accent animate-pulse"
+                        className="h-8 w-2 bg-primary animate-pulse"
                         style={{
                             animationDelay: `${i * 0.2}s`,
                             animationDuration: '1s',
