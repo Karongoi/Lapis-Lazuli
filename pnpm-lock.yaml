@@ -53,6 +53,9 @@ importers:
       next:
         specifier: 15.5.6
         version: 15.5.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      nprogress:
+        specifier: ^0.2.0
+        version: 0.2.0
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
@@ -81,6 +84,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.19.22
+      '@types/nprogress':
+        specifier: ^0.2.3
+        version: 0.2.3
       '@types/react':
         specifier: ^19
         version: 19.2.2
@@ -1125,6 +1131,9 @@ packages:
   '@types/node@20.19.22':
     resolution: {integrity: sha512-hRnu+5qggKDSyWHlnmThnUqg62l29Aj/6vcYgUaSFL9oc7DVjeWEQN3PRgdSc6F8d9QRMWkf36CLMch1Do/+RQ==}
 
+  '@types/nprogress@0.2.3':
+    resolution: {integrity: sha512-k7kRA033QNtC+gLc4VPlfnue58CM1iQLgn1IMAU8VPHGOj7oIHPp9UlhedEnD/Gl8evoCjwkZjlBORtZ3JByUA==}
+
   '@types/phoenix@1.6.6':
     resolution: {integrity: sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A==}
 
@@ -1488,6 +1497,9 @@ packages:
         optional: true
       sass:
         optional: true
+
+  nprogress@0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
 
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
@@ -2466,6 +2478,8 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/nprogress@0.2.3': {}
+
   '@types/phoenix@1.6.6': {}
 
   '@types/react-dom@19.2.2(@types/react@19.2.2)':
@@ -2736,6 +2750,8 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+
+  nprogress@0.2.0: {}
 
   path-key@3.1.1: {}
 
