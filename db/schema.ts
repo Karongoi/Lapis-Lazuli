@@ -82,7 +82,7 @@ export const product_media = pgTable("product_media", {
 // WISHLISTS
 export const wishlists = pgTable("wishlists", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id),
+    user_id: uuid("user_id").references(() => profiles.id),
     created_at: timestamp("created_at").defaultNow(),
 });
 
@@ -95,7 +95,7 @@ export const wishlist_items = pgTable("wishlist_items", {
 // CARTS
 export const carts = pgTable("carts", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id), // text because auth.uid() is text
+    user_id: uuid("user_id").references(() => profiles.id), // text because auth.uid() is text
     guest_id: text("guest_id"), // temporary ID for guest carts
     created_at: timestamp("created_at").defaultNow(),
 });
@@ -110,7 +110,7 @@ export const cart_items = pgTable("cart_items", {
 // ORDERS
 export const orders = pgTable("orders", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id),
+    user_id: uuid("user_id").references(() => profiles.id),
     order_number: varchar("order_number").unique(),
     status: varchar("status"), // pending, paid, shipped, delivered, cancelled
     subtotal: numeric("subtotal", { precision: 10, scale: 2 }),
@@ -154,7 +154,7 @@ export const payments = pgTable("payments", {
 // REVIEWS
 export const reviews = pgTable("reviews", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id),
+    user_id: uuid("user_id").references(() => profiles.id),
     product_id: integer("product_id").references(() => products.id),
     rating: integer("rating"), // 1 to 5
     comment: text("comment"),
@@ -164,7 +164,7 @@ export const reviews = pgTable("reviews", {
 // CUSTOM ORDERS
 export const custom_orders = pgTable("custom_orders", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id),
+    user_id: uuid("user_id").references(() => profiles.id),
     description: text("description"),
     reference_images: text("reference_images"),
     status: varchar("status"), // pending, confirmed, in-progress, completed
@@ -174,7 +174,7 @@ export const custom_orders = pgTable("custom_orders", {
 // NOTIFICATIONS
 export const notifications = pgTable("notifications", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id),
+    user_id: uuid("user_id").references(() => profiles.id),
     message: text("message"),
     type: varchar("type"), // order_update, promo, system
     is_read: boolean("is_read").default(false),
@@ -184,7 +184,7 @@ export const notifications = pgTable("notifications", {
 // NEWSLETTER SUBSCRIPTIONS
 export const newsletter_subscriptions = pgTable("newsletter_subscriptions", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id),
+    user_id: uuid("user_id").references(() => profiles.id),
     subscribed: boolean("subscribed"),
     updated_at: timestamp("updated_at").defaultNow(),
 });
@@ -192,7 +192,7 @@ export const newsletter_subscriptions = pgTable("newsletter_subscriptions", {
 // ANALYTICS
 export const analytics = pgTable("analytics", {
     id: serial("id").primaryKey(),
-    user_id: integer("user_id").references(() => profiles.id),
+    user_id: uuid("user_id").references(() => profiles.id),
     product_id: integer("product_id").references(() => products.id),
     collection_id: integer("collection_id").references(() => collections.id),
     category_id: integer("category_id").references(() => categories.id),
