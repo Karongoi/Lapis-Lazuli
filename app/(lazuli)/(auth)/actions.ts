@@ -2,68 +2,67 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { profiles } from '@/db/schema';
 
 import { createClient } from '@/utils/supabase/server'
+import { db } from '@/lib/db';
 
-export async function login(formData: FormData) {
+
+export async function loginAction(email: string, password: string, next: string) {
     const supabase = await createClient()
 
-    // type-casting here for convenience
-    // in practice, you should validate your inputs
-    const data = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-    }
-
-    const next = (formData.get('next') as string) || '/'
-
-    const { error } = await supabase.auth.signInWithPassword(data)
+    // TODO: type-casting here, validate your inputs
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-        redirect('/error')
+        return { error: error.message }
     }
 
     revalidatePath('/', 'layout')
     redirect(next)
 }
 
-export async function signup(formData: FormData) {
+export async function signupAction(email: string, password: string, next: string) {
     const supabase = await createClient()
 
-    // type-casting here for convenience
-    // in practice, you should validate your inputs
-    const data = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-    }
+    // TODO: type-casting here, validate your inputs
+    const { data: response, error } = await supabase.auth.signUp({
+        email,
+        password,
+    })
 
-    const next = (formData.get('next') as string) || '/'
-
-    const { data: response, error } = await supabase.auth.signUp(data)
-
-    revalidatePath('/', 'layout')
-
+    console.log('Signup response:', response);
+    console.log('Signup error:', error);
     if (error) {
-        redirect('/error')
+        return { error: error.message }
     }
 
-    // If you have email confirmations enabled, Supabase will NOT sign the user in immediately.
-    // So we check if the session exists:
+    const user = response.user
+    if (!user) {
+        return { error: 'Failed to create user. Please try again.' }
+    }
+    // Insert profile via Drizzle
+    if (user.id) {
+        await db.insert(profiles).values({
+            id: user.id,
+            email: user.email!,
+            role: 'user',
+            full_name: '',
+        });
+    }
+
+    // check if the session exists:
     const session = response.session
 
-    if (session) {
-        // User already authenticated — redirect to `next`
-        redirect(next)
-    } else {
-            // Email confirmation required
-            redirect('/verify-email') // or show a message
-        }
-    }
+    revalidatePath('/', 'layout')
+    if (session) redirect(next);        // already authenticated
+    else redirect('/verify-email');
+}
 
-    export async function logout() {
-        const supabase = await createClient()
-        await supabase.auth.signOut()
+export async function logout() {
+    const supabase = await createClient()
+    await supabase.auth.signOut()
 
-        revalidatePath('/', 'layout')
-        redirect('/login')
-    }
+    revalidatePath('/', 'layout')
+    redirect('/login')
+}
