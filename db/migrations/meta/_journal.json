@@ -8,6 +8,27 @@
       "when": 1761312896207,
       "tag": "0000_tiny_black_cat",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1761902616863,
+      "tag": "0001_tranquil_silver_centurion",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761909814929,
+      "tag": "0002_change_profile_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1761911166492,
+      "tag": "0003_change_profile_uuid",
+      "breakpoints": true
     }
   ]
 }
