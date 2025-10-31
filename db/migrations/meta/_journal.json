@@ -29,6 +29,20 @@
       "when": 1761911166492,
       "tag": "0003_change_profile_uuid",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1761930814073,
+      "tag": "0004_update-user-id-to-uuid",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1761931190837,
+      "tag": "0005_update-user-id-to-text",
+      "breakpoints": true
     }
   ]
 }
