@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="border-b border-border bg-card p-6">
           <h2 className="text-xl font-bold text-card-foreground">Dashboard</h2>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-6 bg-background">{children}</div>
       </main>
     </div>
   )

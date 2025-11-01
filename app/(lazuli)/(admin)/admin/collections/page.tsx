@@ -61,9 +61,11 @@ export default function CollectionsPage() {
                                         <p className="text-sm text-muted-foreground">{collection.description}</p>
                                     </div>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm">
-                                            Edit
-                                        </Button>
+                                        <Link href={`/admin/collections/${collection.id}`}>
+                                            <Button variant="outline" size="sm">
+                                                Edit
+                                            </Button>
+                                        </Link>
                                         <Button variant="destructive" size="sm" onClick={() => handleDelete(collection.id)}>
                                             Delete
                                         </Button>

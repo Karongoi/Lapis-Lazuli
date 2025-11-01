@@ -61,9 +61,11 @@ export default function PromotionsPage() {
                                         <p className="text-sm text-muted-foreground">{promotion.discount_percentage}% off</p>
                                     </div>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm">
-                                            Edit
-                                        </Button>
+                                        <Link href={`/admin/promotions/${promotion.id}`}>
+                                            <Button variant="outline" size="sm">
+                                                Edit
+                                            </Button>
+                                        </Link>
                                         <Button variant="destructive" size="sm" onClick={() => handleDelete(promotion.id)}>
                                             Delete
                                         </Button>

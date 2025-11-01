@@ -61,9 +61,11 @@ export default function CategoriesPage() {
                                         <p className="text-sm text-muted-foreground">Gender: {category.gender}</p>
                                     </div>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm">
-                                            Edit
-                                        </Button>
+                                        <Link href={`/admin/categories/${category.id}`}>
+                                            <Button variant="outline" size="sm">
+                                                Edit
+                                            </Button>
+                                        </Link>
                                         <Button variant="destructive" size="sm" onClick={() => handleDelete(category.id)}>
                                             Delete
                                         </Button>
