@@ -7,6 +7,18 @@ import { SearchIcon } from "@/components/ui/search"
 import { NavDropdown } from "@/components/navbar-dropdown"
 import { useState } from "react"
 import { SearchPopup } from "./search-popup"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/context/AuthContext"
+import { useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
 
 const shopMenuItems = [
     {
@@ -63,7 +75,10 @@ const collectionsMenuItems = [
 ]
 
 export default function Navbar() {
+    const router = useRouter()
+    const { user, signOut } = useAuth();
     const [isSearchOpen, setIsSearchOpen] = useState(false)
+    const queryClient = useQueryClient()
 
     return (
         <div className="w-full flex items-center justify-between gap-8 p-4 md:px-8 font-jost">
@@ -86,7 +101,7 @@ export default function Navbar() {
                 </ul>
             </nav>
             {/* Account Menu: search, fav, cart */}
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
                 <button
                     onClick={() => setIsSearchOpen(true)}
                     aria-label="Search"
@@ -102,10 +117,36 @@ export default function Navbar() {
                     {" "}
                     <CartIcon />{" "}
                 </Link>
-                <Link className="hover:text-secondary" href="/account">
-                    {" "}
-                    <UserIcon />
-                </Link>
+                {/* Profile dropdown */}
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Avatar className="cursor-pointer">
+                            <AvatarImage src={user?.user_metadata?.avatar_url || ""} />
+                            <AvatarFallback>
+                                {user?.user_metadata?.full_name?.[0] || "U"}
+                            </AvatarFallback>
+                        </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>
+                            {user?.user_metadata?.full_name || user?.email || "Anonymous"}
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => router.push('/account')}><UserIcon /> Account</DropdownMenuItem>
+                        {user ? (
+                            <DropdownMenuItem onClick={async () => {
+                                queryClient.clear();
+                                await signOut();
+                            }}>
+                                Logout
+                            </DropdownMenuItem>
+                        ) : (
+                            <DropdownMenuItem onClick={() => router.push('/login')}>
+                                Login
+                            </DropdownMenuItem>
+                        )}
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
 
             <SearchPopup isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
