@@ -5,6 +5,7 @@ import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/constan
 import AppProvider from "./(providers)/AppProvider";
 import TanstackProvider from "./(providers)/QueryProvider";
 import { GlobalRouteLoader } from "@/common/widgets/GlobalLoader";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,6 +49,7 @@ export default function RootLayout({
         className={`${jost.variable} antialiased text-foreground bg-background ${geistSans.variable} ${geistMono.variable}`}
       >
         <GlobalRouteLoader />
+        <Toaster position="top-right" />
         <AppProvider>
           <TanstackProvider>
             {children}
