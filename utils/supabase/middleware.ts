@@ -1,5 +1,8 @@
+import { db } from '@/lib/db'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { eq } from 'drizzle-orm'
+import { profiles } from '@/db/schema'
 
 export async function updateSession(request: NextRequest) {
     let supabaseResponse = NextResponse.next({
@@ -27,9 +30,8 @@ export async function updateSession(request: NextRequest) {
         }
     )
 
-    // Do not run code between createServerClient and
-    // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-    // issues with users being randomly logged out.
+    // Do not run code between createServerClient and supabase.auth.getUser().
+    // A simple mistake could make it very hard to debug issues with users being randomly logged out.
 
     // IMPORTANT: DO NOT REMOVE auth.getUser()
     const { data: { user } } = await supabase.auth.getUser()
@@ -38,8 +40,16 @@ export async function updateSession(request: NextRequest) {
 
     // --- Routes that require authentication ---
     const protectedRoutes = ['/checkout', '/account', '/settings', '/profile', '/admin']
+    const authRoutes = ['/login', '/signup', '/verify-email']
 
     const isProtected = protectedRoutes.some(route => pathname.startsWith(route))
+
+    // --- Redirect authenticated users away from auth pages ---
+    if (authRoutes.some(route => pathname.startsWith(route)) && user) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/home'
+        return NextResponse.redirect(url)
+    }
 
     // --- Redirect unauthenticated users trying to access protected pages ---
     if (isProtected && !user) {
@@ -49,19 +59,32 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    if (pathname.startsWith("/admin")) {
-        if (!user) return NextResponse.redirect(new URL("/login", request.url));
+    if (user) {
+        const userId = user.id
+        console.log('Middleware authenticated user:', { userId, pathname })
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', userId)
+            .single()
 
-        const { data } = await supabase
-            .from("users")
-            .select("role")
-            .eq("id", user.id)
-            .single();
+        // const profile = await db.query.profiles.findFirst({
+        //     where: eq(profiles.id, user.id),
+        // })
 
-        if (data?.role !== "admin") {
-            return NextResponse.redirect(new URL("/", request.url));
+        const role = profile?.role?.toLowerCase().trim()
+
+        // 🔍 Debug info (only in development)
+        if (process.env.NODE_ENV === 'development') {
+            console.log('Middleware role check:', { profile, userId, role, pathname })
+        }
+
+        // Restrict access to /admin if not admin
+        if (pathname.startsWith('/admin') && role !== 'admin') {
+            return NextResponse.redirect(new URL('/home', request.url))
         }
     }
+
     // IMPORTANT: You *must* return the supabaseResponse object as it is.
     // If you're creating a new response object with NextResponse.next() make sure to:
     // 1. Pass the request in it, like so:
