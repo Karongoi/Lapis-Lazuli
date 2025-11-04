@@ -1,15 +1,22 @@
+"use client"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-
-const stats = [
-    { label: "Total Products", value: "0", href: "/admin/products" },
-    { label: "Active Collections", value: "0", href: "/admin/collections" },
-    { label: "Categories", value: "0", href: "/admin/categories" },
-    { label: "Recent Orders", value: "0", href: "/admin/orders" },
-]
+import { useFetchCategories, useFetchCollections, useFetchProducts } from "@/hooks/useStore"
 
 export default function AdminDashboard() {
+    const { collections, isCollectionsLoading } = useFetchCollections()
+    const { categories, isCategoriesLoading } = useFetchCategories()
+        const { products, isProductsLoading } = useFetchProducts()
+
+    const isLoading = isCollectionsLoading || isCategoriesLoading || isProductsLoading
+    const stats = [
+        { label: "Total Products", value: `${products?.length}`, href: "/admin/products" },
+        { label: "Active Collections", value: `${collections?.length}`, href: "/admin/collections" },
+        { label: "Categories", value: `${categories?.length}`, href: "/admin/categories" },
+        { label: "Recent Orders", value: "0", href: "/admin/orders" },
+    ]
+
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -19,7 +26,7 @@ export default function AdminDashboard() {
                             <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-3xl font-bold">{stat.value}</div>
+                            <div className="text-3xl font-bold">{isLoading ? 0 : stat.value}</div>
                             <Link href={stat.href}>
                                 <Button variant="outline" size="sm" className="mt-4 w-full bg-transparent">
                                     Manage

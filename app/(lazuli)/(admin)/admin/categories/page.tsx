@@ -4,33 +4,32 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useFetchCategories } from "@/hooks/useStore"
 
 export default function CategoriesPage() {
-    const [categories, setCategories] = useState([])
-    const [loading, setLoading] = useState(true)
+    const { categories, isCategoriesLoading } = useFetchCategories()
+    // useEffect(() => {
+    //     fetchCategories()
+    // }, [])
 
-    useEffect(() => {
-        fetchCategories()
-    }, [])
-
-    async function fetchCategories() {
-        try {
-            const res = await fetch("/api/admin/categories")
-            if (!res.ok) throw new Error("Failed to fetch")
-            const result = await res.json()
-            setCategories(result.data || [])
-        } catch (err) {
-            console.error(err)
-        } finally {
-            setLoading(false)
-        }
-    }
+    // async function fetchCategories() {
+    //     try {
+    //         const res = await fetch("/api/admin/categories")
+    //         if (!res.ok) throw new Error("Failed to fetch")
+    //         const result = await res.json()
+    //         setCategories(result.data || [])
+    //     } catch (err) {
+    //         console.error(err)
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
 
     async function handleDelete(id: number) {
         if (!confirm("Delete this category?")) return
         try {
             await fetch(`/api/admin/categories/${id}`, { method: "DELETE" })
-            setCategories(categories.filter((c: any) => c.id !== id))
+            categories.filter((c: any) => c.id !== id)
         } catch (err) {
             alert("Failed to delete")
         }
@@ -50,7 +49,7 @@ export default function CategoriesPage() {
                     <CardTitle>All Categories</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {loading ? (
+                    {isCategoriesLoading ? (
                         <div className="py-8 text-center text-muted-foreground">Loading...</div>
                     ) : (
                         <div className="space-y-4">

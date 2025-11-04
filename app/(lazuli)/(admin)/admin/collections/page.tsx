@@ -4,33 +4,32 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useFetchCollections } from "@/hooks/useStore"
 
 export default function CollectionsPage() {
-    const [collections, setCollections] = useState([])
-    const [loading, setLoading] = useState(true)
+    const { collections, isCollectionsLoading } = useFetchCollections()
+    // useEffect(() => {
+    //     fetchCollections()
+    // }, [])
 
-    useEffect(() => {
-        fetchCollections()
-    }, [])
-
-    async function fetchCollections() {
-        try {
-            const res = await fetch("/api/admin/collections")
-            if (!res.ok) throw new Error("Failed to fetch")
-            const result = await res.json()
-            setCollections(result.data || [])
-        } catch (err) {
-            console.error(err)
-        } finally {
-            setLoading(false)
-        }
-    }
+    // async function fetchCollections() {
+    //     try {
+    //         const res = await fetch("/api/admin/collections")
+    //         if (!res.ok) throw new Error("Failed to fetch")
+    //         const result = await res.json()
+    //         setCollections(result.data || [])
+    //     } catch (err) {
+    //         console.error(err)
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
 
     async function handleDelete(id: number) {
         if (!confirm("Delete this collection?")) return
         try {
             await fetch(`/api/admin/collections/${id}`, { method: "DELETE" })
-            setCollections(collections.filter((c: any) => c.id !== id))
+            collections.filter((c: any) => c.id !== id)
         } catch (err) {
             alert("Failed to delete")
         }
@@ -50,7 +49,7 @@ export default function CollectionsPage() {
                     <CardTitle>All Collections</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {loading ? (
+                    {isCollectionsLoading ? (
                         <div className="py-8 text-center text-muted-foreground">Loading...</div>
                     ) : (
                         <div className="space-y-4">

@@ -6,37 +6,36 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DataTable } from "@/components/admin/data-table"
+import { useFetchProducts } from "@/hooks/useStore"
 
 export default function ProductsPage() {
     const router = useRouter()
-    const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    const { products, isProductsLoading, error } = useFetchProducts()
 
-    useEffect(() => {
-        fetchProducts()
-    }, [])
+    // useEffect(() => {
+    //     fetchProducts()
+    // }, [])
 
-    async function fetchProducts() {
-        try {
-            setLoading(true)
-            const res = await fetch("/api/admin/products")
-            if (!res.ok) throw new Error("Failed to fetch products")
-            const result = await res.json()
-            setProducts(result.data || [])
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An error occurred")
-        } finally {
-            setLoading(false)
-        }
-    }
+    // async function fetchProducts() {
+    //     try {
+    //         setLoading(true)
+    //         const res = await fetch("/api/admin/products")
+    //         if (!res.ok) throw new Error("Failed to fetch products")
+    //         const result = await res.json()
+    //         setProducts(result.data || [])
+    //     } catch (err) {
+    //         setError(err instanceof Error ? err.message : "An error occurred")
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
 
     async function handleDelete(id: number) {
         if (!confirm("Are you sure you want to delete this product?")) return
         try {
             const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" })
             if (!res.ok) throw new Error("Failed to delete product")
-            setProducts(products.filter((p: any) => p.id !== id))
+            products.filter((p: any) => p.id !== id)
         } catch (err) {
             alert(err instanceof Error ? err.message : "An error occurred")
         }
@@ -60,14 +59,18 @@ export default function ProductsPage() {
                 </Link>
             </div>
 
-            {error && <div className="rounded-md bg-destructive/10 p-4 text-destructive">{error}</div>}
+            {error && (
+                <div className="rounded-md bg-destructive/10 p-4 text-destructive">
+                    {error instanceof Error ? error.message : String(error)}
+                </div>
+            )}
 
             <Card>
                 <CardHeader>
                     <CardTitle>All Products</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {loading ? (
+                    {isProductsLoading ? (
                         <div className="py-8 text-center text-muted-foreground">Loading...</div>
                     ) : (
                         <DataTable
