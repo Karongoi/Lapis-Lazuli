@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -12,28 +11,9 @@ import { FormField } from "@/components/admin/form-field"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { generateSKU } from "@/lib/sku-generator"
 import { CLOTHING_SIZES } from "@/lib/constants"
-
-interface ProductFormProps {
-    productId?: number
-    collections: any[]
-    categories: any[]
-}
-
-interface Variant {
-    id?: number
-    color: string
-    size: string
-    additional_price: number
-    stock: number
-    sku: string
-}
-
-interface MediaItem {
-    id?: number
-    media_url: string
-    media_type: "image" | "mockup" | "artwork"
-    is_primary: boolean
-}
+import { MediaItem, ProductFormProps, Variant } from "@/lib/types"
+import { CloudinaryUpload } from "./upload-form"
+import toast from "react-hot-toast"
 
 export function ProductForm({ productId, collections, categories }: ProductFormProps) {
     const router = useRouter()
@@ -145,7 +125,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
             if (!res.ok) throw new Error("Failed to save product")
             router.push("/admin/products")
         } catch (err) {
-            alert(err instanceof Error ? err.message : "An error occurred")
+            toast.error(err instanceof Error ? err.message : "An error occurred")
         } finally {
             setSubmitting(false)
         }
@@ -153,7 +133,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
 
     function addVariant() {
         if (!newVariant.color || !newVariant.size || !newVariant.sku) {
-            alert("Please fill all variant fields")
+            toast.error("Please fill all variant fields")
             return
         }
         setVariants([
@@ -169,7 +149,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
 
     function addMedia() {
         if (!newMedia.media_url) {
-            alert("Please enter a media URL")
+            toast.error("Please enter a media URL")
             return
         }
         setMedia([...media, newMedia])
@@ -249,7 +229,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
 
                         <FormField label="Status" error={errors.status}>
                             <Select value={formData.status} onValueChange={(val) => setFormData({ ...formData, status: val })}>
-                                <SelectTrigger>
+                                <SelectTrigger className="w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -261,7 +241,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                         </FormField>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <FormField label="Price" required error={errors.price}>
                             <Input
                                 type="number"
@@ -286,7 +266,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                                 value={formData.category_id}
                                 onValueChange={(val) => setFormData({ ...formData, category_id: val })}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select category" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -305,7 +285,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                             value={formData.collection_id}
                             onValueChange={(val) => setFormData({ ...formData, collection_id: val })}
                         >
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full lg:w-[32%]">
                                 <SelectValue placeholder="Select collection" />
                             </SelectTrigger>
                             <SelectContent>
@@ -327,7 +307,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-b-3">
-                        <div className="grid grid-cols-5 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
                             <div className="flex flex-col gap-1">
                                 <p className="text-foreground/50 text-xs">color ie. White, Black</p>
                                 <Input
@@ -404,13 +384,13 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                     {variants.length > 0 && (
                         <div className="space-y-2 flex flex-wrap gap-y-2 gap-x-8">
                             {variants.map((variant, idx) => (
-                                <div key={idx} className="flex items-center justify-between rounded-sm border p-3">
+                                <div key={idx} className="flex flex-col sm:flex-row items-center justify-between rounded-sm border p-3">
                                     <div className="text-sm">
                                         <p className="font-medium">
                                             {variant.color} - {variant.size}
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            SKU: {variant.sku} | Stock: {variant.stock} | +${Number(variant.additional_price).toFixed(2)}
+                                            SKU: {variant.sku} | Stock: {variant.stock} | +KES {Number(variant.additional_price).toFixed(2)}
                                         </p>
                                     </div>
                                     <Button
@@ -436,17 +416,23 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
+                        <CloudinaryUpload
+                            folder="products"
+                            onUploadComplete={(url) =>
+                                setNewMedia((prev) => ({ ...prev, media_url: url }))
+                            }
+                        />
                         <Input
                             placeholder="Media URL"
                             value={newMedia.media_url}
                             onChange={(e) => setNewMedia({ ...newMedia, media_url: e.target.value })}
                         />
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                             <Select
                                 value={newMedia.media_type}
                                 onValueChange={(val) => setNewMedia({ ...newMedia, media_type: val as any })}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -477,7 +463,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                                     <img
                                         src={item.media_url || "/placeholder.svg"}
                                         alt="preview"
-                                        className="h-32 w-full object-cover rounded-lg"
+                                        className="h-48 w-full object-contain rounded-lg"
                                     />
                                     <div className="absolute inset-0 flex flex-col justify-between rounded-lg bg-black/30 p-2 opacity-0 hover:opacity-100 transition-opacity">
                                         <div className="text-xs text-white">
