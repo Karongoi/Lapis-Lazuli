@@ -45,7 +45,7 @@ export default function SearchPage() {
     const filteredProducts = filterProducts(results, filters)
 
     return (
-        <div className="min-h-screen bg-background w-full px-4 py-12">
+        <div className="min-h-screen bg-background w-full px-4 pt-4 border-t border-border">
             <Breadcrumb
                 className="ml-10"
                 items={[
@@ -53,7 +53,7 @@ export default function SearchPage() {
                     { label: "Search" },
                 ]}
             />
-            <div className="flex flex-col md:flex-row w-full gap-6 p-6">
+            <div className="flex flex-col md:flex-row w-full gap-6 px-6">
                 <aside className="relative w-full max-w-[300px]">
                     <ResponsiveFilterWrapper products={results} filters={filters} onFilterChange={toggleFilter} />
                 </aside>
@@ -85,7 +85,7 @@ export default function SearchPage() {
                                 <SelectedFilters filters={filters} onClearFilter={clearFilter} onClearAll={clearAllFilters} />
 
                                 {/* Product Grid */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                                     {filteredProducts.map((product) => (
                                         <ProductCard
                                             key={product.id}
