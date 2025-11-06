@@ -3,14 +3,14 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { SlidersHorizontal } from "lucide-react"
-import { Product } from "@/lib/mockData"
 import { Filters } from "@/lib/filterUtils"
 import { FilterPanel } from "./filterPanel"
+import { ProductFull, Category, Collection } from "@/lib/types"
 
 interface ResponsiveFilterWrapperProps {
-    products: Product[]
+    products: ProductFull[]
     filters: Filters
-    onFilterChange: (filterType: keyof Filters, value: string) => void
+    onFilterChange: (filterType: keyof Filters, value: string | Category | Collection) => void
 }
 
 export function ResponsiveFilterWrapper({ products, filters, onFilterChange }: ResponsiveFilterWrapperProps) {

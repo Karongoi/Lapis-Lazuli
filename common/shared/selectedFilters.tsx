@@ -2,8 +2,8 @@
 
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { mockCategories ,mockCollections } from "@/lib/mockData"
 import { Filters } from "@/lib/filterUtils"
+import { Category, Collection } from "@/lib/types"
 
 interface SelectedFiltersProps {
     filters: Filters
@@ -12,15 +12,15 @@ interface SelectedFiltersProps {
 }
 
 export function SelectedFilters({ filters, onClearFilter, onClearAll }: SelectedFiltersProps) {
-    const getFilterLabel = (filterType: keyof Filters, value: string): string => {
-        if (filterType === "categories") {
-            return mockCategories.find((c) => c.id === value)?.name || value
+    const getFilterLabel = (filterType: keyof Filters, value: string | Category | Collection): string => {
+        if (filterType === "categories" && typeof value !== "string") {
+            return (value as Category).name;
         }
-        if (filterType === "collections") {
-            return mockCollections.find((c) => c.id === value)?.name || value
+        if (filterType === "collections" && typeof value !== "string") {
+            return (value as Collection).name;
         }
-        return value
-    }
+        return value as string;
+    };
 
     const allFilters = [
         ...filters.categories.map((v) => ({ type: "categories" as const, value: v })),
@@ -43,7 +43,7 @@ export function SelectedFilters({ filters, onClearFilter, onClearAll }: Selected
                 >
                     <span>{getFilterLabel(type, value)}</span>
                     <button
-                        onClick={() => onClearFilter(type, value)}
+                        onClick={() => onClearFilter(type, value as string)}
                         className="hover:opacity-70 transition-opacity"
                         aria-label={`Remove ${getFilterLabel(type, value)} filter`}
                     >
