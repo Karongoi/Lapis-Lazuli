@@ -1,45 +1,48 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Product } from "@/lib/mockData"
 import { ProductCard } from "@/common/shared/productCard"
 import { Breadcrumb } from "@/components/breadcrumb"
 import { filterProducts } from "@/lib/filterUtils"
 import { useFilters } from "@/hooks/useFilters"
 import { ResponsiveFilterWrapper } from "@/common/shared/responsive-filter-wrapper"
 import { SelectedFilters } from "@/common/shared/selectedFilters"
+import { ProductFull } from "@/lib/types"
+import { useAllProductDetails } from "@/hooks/useFullProducts"
 
 export default function SearchPage() {
     const searchParams = useSearchParams()
     const query = searchParams.get("q") || ""
-    const [results, setResults] = useState<Product[]>([])
-    const [isLoading, setIsLoading] = useState(true)
-    const { filters, toggleFilter, clearFilter, clearAllFilters } = useFilters()
-    const filteredProducts = filterProducts(results, filters)
+    const { data: products = [], isLoading } = useAllProductDetails()
+    const [debouncedQuery, setDebouncedQuery] = useState("")
 
     useEffect(() => {
-        if (!query) {
-            setResults([])
-            setIsLoading(false)
-            return
-        }
-
-        const fetchResults = async () => {
-            try {
-                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
-                const data = await response.json()
-                setResults(data.results)
-            } catch (error) {
-                console.error("Search error:", error)
-                setResults([])
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchResults()
+        const timeout = setTimeout(() => setDebouncedQuery(query), 300)
+        return () => clearTimeout(timeout)
     }, [query])
+
+    // 🔍 Filter products locally
+    const results = useMemo(() => {
+        if (!debouncedQuery.trim()) return []
+        const query = debouncedQuery.toLowerCase()
+
+        return products.filter((p: ProductFull) => {
+            const searchableText = `
+          ${p.name}
+          ${p.design_name}
+          ${p.material || ""}
+          ${p.print_type || ""}
+          ${(p.variants || []).map(v => `${v.color} ${v.size}`).join(" ")}
+          ${p.collection?.name || ""}
+          ${p.category?.name || ""}
+        `.toLowerCase()
+
+            return searchableText.includes(query)
+        })
+    }, [debouncedQuery, products])
+    const { filters, toggleFilter, clearFilter, clearAllFilters } = useFilters()
+    const filteredProducts = filterProducts(results, filters)
 
     return (
         <div className="min-h-screen bg-background w-full px-4 py-12">
@@ -59,7 +62,7 @@ export default function SearchPage() {
                     <div className="max-w-6xl mx-auto">
                         {/* Header */}
                         <div className="mb-8">
-                            <h1 className="text-4xl font-bold mb-2">Search Results</h1>
+                            <h1 className="text-2xl font-bold mb-2">Search Results</h1>
                             <p className="text-sm text-muted-foreground"> {filteredProducts?.length} product{filteredProducts.length !== 1 ? "s" : ""} {query && `results for "${query}"`}</p>
                         </div>
 

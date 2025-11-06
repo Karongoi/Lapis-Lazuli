@@ -13,7 +13,7 @@ export function ProductCard({ product, onClose }: ProductCardProps) {
             key={product.id}
             href={`/product/${product.id}`}
             onClick={onClose}
-            className="group bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg hover:shadow-primary/30 transition-shadow"
+            className="group bg-background border border-border rounded-sm overflow-hidden hover:shadow-lg hover:shadow-primary/15 transition-shadow"
         >
             <div className="aspect-square relative bg-muted overflow-hidden">
                 <img
