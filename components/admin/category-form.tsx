@@ -21,8 +21,8 @@ export function CategoryForm({ categoryId }: CategoryFormProps) {
     const [errors, setErrors] = useState<Record<string, string>>({})
 
     const [formData, setFormData] = useState({
-        name: "",
-        gender: "unisex",
+        name: "T-shirts",
+        gender: "men",
     })
 
     useEffect(() => {
@@ -82,13 +82,25 @@ export function CategoryForm({ categoryId }: CategoryFormProps) {
                 <CardHeader>
                     <CardTitle>{isEditing ? "Edit Category" : "Create New Category"}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="grid grid-cols-1 gap-6 sm:grid-cols-2 w-full">
                     <FormField label="Category Name" required error={errors.name}>
-                        <Input
+                        {/* T-Shirts, Hoodies, Cropped Hoodies, Tank Tops, Cropped Tank Tops, Tote bags */}
+                        <Select
                             value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            placeholder="e.g., T-shirts, Hoodies"
-                        />
+                            onValueChange={(val) => setFormData({ ...formData, name: val })}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue  />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="T-Shirts">T-Shirts</SelectItem>
+                                <SelectItem value="Hoodies">Hoodies</SelectItem>
+                                <SelectItem value="Cropped Hoodies">Cropped Hoodies</SelectItem>
+                                <SelectItem value="Tank Tops">Tank Tops</SelectItem>
+                                <SelectItem value="Cropped Tank Tops">Cropped Tank Tops</SelectItem>
+                                <SelectItem value="Tote Bags">Tote Bags</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </FormField>
 
                     <FormField label="Gender">
@@ -96,15 +108,16 @@ export function CategoryForm({ categoryId }: CategoryFormProps) {
                             value={formData.gender}
                             onValueChange={(val) => setFormData({ ...formData, gender: val })}
                         >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                            <SelectItem value="men">Men</SelectItem>
-                            <SelectItem value="women">Women</SelectItem>
-                            <SelectItem value="kids">Kids</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <SelectTrigger className="w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="men">Men</SelectItem>
+                                <SelectItem value="women">Women</SelectItem>
+                                <SelectItem value="kids">Kids</SelectItem>
+                                <SelectItem value="unisex">Unisex</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </FormField>
                 </CardContent>
             </Card>

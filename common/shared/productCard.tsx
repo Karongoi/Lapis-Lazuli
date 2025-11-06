@@ -1,9 +1,10 @@
-import { Product } from '@/lib/mockData'
+
+import { ProductFull } from '@/lib/types'
 import Link from 'next/link'
 import React from 'react'
 
 interface ProductCardProps {
-    product: Product
+    product: ProductFull
     onClose?: () => void
 }
 export function ProductCard({ product, onClose }: ProductCardProps) {
@@ -12,11 +13,11 @@ export function ProductCard({ product, onClose }: ProductCardProps) {
             key={product.id}
             href={`/product/${product.id}`}
             onClick={onClose}
-            className="group border border-border rounded-lg overflow-hidden hover:shadow-lg hover:shadow-primary/30 transition-shadow"
+            className="group bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg hover:shadow-primary/30 transition-shadow"
         >
             <div className="aspect-square relative bg-muted overflow-hidden">
                 <img
-                    src={product.image || "/placeholder.svg"}
+                    src={product.media[0].media_url || "/placeholder.svg"}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
@@ -27,12 +28,12 @@ export function ProductCard({ product, onClose }: ProductCardProps) {
                 }
             </div>
             <div className="p-3">
-                <h2 className="text-xs text-muted-foreground">{product.collectionId}</h2>
+                <h2 className="text-xs text-muted-foreground">{product.collection?.name}</h2>
                 <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors">
                     {product.name}
                 </h3>
-                <p className="text-sm mb-2">{product.color}</p>
-                <p className="font-bold text-secondary">KES {product.price.toFixed(2)}</p>
+                <p className="text-sm mb-2">{product.variants[0].color}</p>
+                <p className="font-bold text-secondary">KES {product.price}</p>
             </div>
         </Link>
     )

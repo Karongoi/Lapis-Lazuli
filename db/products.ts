@@ -11,13 +11,12 @@ export async function getProducts(limit = 50, offset = 0) {
             price: products.price,
             stock: products.stock,
             status: products.status,
-            category: categories.name,
-            collection: collections.name,
+            collection_id: products.collection_id,
+            category_id: products.category_id,
             created_at: products.created_at,
+            updated_at: products.updated_at,
         })
         .from(products)
-        .leftJoin(categories, eq(products.category_id, categories.id))
-        .leftJoin(collections, eq(products.collection_id, collections.id))
         .limit(limit)
         .offset(offset)
 }

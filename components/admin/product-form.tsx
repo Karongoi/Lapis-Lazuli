@@ -272,7 +272,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
                                 <SelectContent>
                                     {categories.map((cat) => (
                                         <SelectItem key={cat.id} value={cat.id.toString()}>
-                                            {cat.name}
+                                            {cat.name} - {cat.gender}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
