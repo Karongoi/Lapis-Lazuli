@@ -15,7 +15,7 @@ export function ShopDetails({ initialProducts }: ShopDetailsProps) {
     const filteredProducts = filterProducts(initialProducts, filters)
 
     return (
-        <div className="flex flex-col md:flex-row w-full gap-6 p-6">
+        <div className="flex flex-col md:flex-row w-full gap-6 px-6">
             <aside className="relative w-full max-w-[300px]">
                 <ResponsiveFilterWrapper products={initialProducts} filters={filters} onFilterChange={toggleFilter} />
             </aside>
@@ -23,7 +23,7 @@ export function ShopDetails({ initialProducts }: ShopDetailsProps) {
             <main className="flex-1">
                 <SelectedFilters filters={filters} onClearFilter={clearFilter} onClearAll={clearAllFilters} />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                     {filteredProducts.length > 0 ? (
                         filteredProducts.map((product) => (
                             <ProductCard key={product.id} product={product} />
