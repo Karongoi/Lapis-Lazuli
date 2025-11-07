@@ -6,17 +6,26 @@ import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { ProductFull } from "@/lib/types";
 
-export default function CollectionPage() {
-    const params = useParams(); // works in client components for Next.js 13+
+export default function CollectionCategoryPage() {
+    const params = useParams();
     const { data: products = [], isLoading } = useAllProductDetails();
-    const collectionSlug = typeof params.collection === "string" ? params.collection : params.collection?.[0];
+    // param eg /imani/t-shirt
+    // Extracting the collection and category from the params (supports catch-all/arrays)
+    const collectionCategory =
+        typeof params.category === "string" ? params.category : params.category?.[0];
+    const collectionSlug =
+        typeof params.collection === "string" ? params.collection : params.collection?.[0];
 
-    // Find products where the product.collection.name matches the param
+    // Find products where the product collection's category matches the param
     const filteredProducts = useMemo(() => {
         return products.filter(
-            (product: ProductFull) => product.collection?.name?.toLowerCase().includes(collectionSlug?.toLowerCase() || "")
+        (product: ProductFull) => {
+            const collectionMatch = product.collection?.name?.toLowerCase().includes(collectionSlug?.toLowerCase() || "");
+            const categoryMatch = product.category?.name?.toLowerCase().includes(collectionCategory?.toLowerCase() || "");
+            return collectionMatch && categoryMatch;
+        }
         );
-    }, [products, collectionSlug]);
+    }, [products, collectionCategory, collectionSlug]);
 
     const collectionData = filteredProducts[0]?.collection;
 
@@ -42,7 +51,7 @@ export default function CollectionPage() {
                 />
                 <div className="flex gap-4 justify-center items-center h-full my-auto">
                     <h1 className="text-xl md:text-2xl lg:text-3xl capitalize leading-tight">
-                        {collectionData?.name ? collectionData.name : collectionSlug?.toString()}
+                        {collectionData?.name ? collectionData.name : collectionCategory?.toString()}
                     </h1>
                 </div>
             </div>
@@ -52,7 +61,8 @@ export default function CollectionPage() {
                     items={[
                         { label: "Home", href: "/home" },
                         { label: "Shop", href: "/shop" },
-                        { label: `${collectionData?.name ? collectionData.name : collectionSlug?.toString()}` },
+                        { label: `${collectionData?.name ? collectionData.name : collectionCategory?.toString()}`, href: `/collections/${collectionSlug}` },
+                        { label: `${collectionCategory?.toString()}` },
                     ]}
                 />
                 <ShopDetails initialProducts={filteredProducts || []} />

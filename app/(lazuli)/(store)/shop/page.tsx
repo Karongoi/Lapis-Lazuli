@@ -11,7 +11,6 @@ import { useAllProductDetails } from "@/hooks/useFullProducts"
 export default function ShopPage() {
     const { filters, toggleFilter, clearFilter, clearAllFilters } = useFilters()
     const { data: products, isLoading } = useAllProductDetails();
-    console.log(products);
     const filteredProducts = filterProducts(products || [], filters)
 
     return (

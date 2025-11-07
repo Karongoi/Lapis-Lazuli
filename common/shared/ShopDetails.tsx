@@ -1,14 +1,13 @@
 "use client"
 import { ProductCard } from "@/common/shared/productCard"
-import { Breadcrumb } from "@/components/breadcrumb"
 import { filterProducts } from "@/lib/filterUtils"
 import { useFilters } from "@/hooks/useFilters"
 import { SelectedFilters } from "@/common/shared/selectedFilters"
 import { ResponsiveFilterWrapper } from "@/common/shared/responsive-filter-wrapper"
-import { Product } from "@/lib/mockData"
+import { ProductFull } from "@/lib/types"
 
 type ShopDetailsProps = {
-    initialProducts: Product[]
+    initialProducts: ProductFull[]
 }
 
 export function ShopDetails({ initialProducts }: ShopDetailsProps) {
@@ -31,7 +30,7 @@ export function ShopDetails({ initialProducts }: ShopDetailsProps) {
                         ))
                     ) : (
                         <div className="col-span-full text-center py-12">
-                            <p className="text-muted-foreground">No products found</p>
+                            <p className="text-muted-foreground">No products found for this.</p>
                         </div>
                     )}
                 </div>
