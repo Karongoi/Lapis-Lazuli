@@ -1,5 +1,4 @@
 "use client"
-import { mockProducts } from "@/lib/mockData"
 import { ProductCard } from "@/common/shared/productCard"
 import { Breadcrumb } from "@/components/breadcrumb"
 import { filterProducts } from "@/lib/filterUtils"
