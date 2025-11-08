@@ -6,19 +6,28 @@ import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { ProductFull } from "@/lib/types";
 
-export default function CollectionPage() {
-    const params = useParams(); // works in client components for Next.js 13+
+export default function CategorySectionPage() {
+    const params = useParams();
     const { data: products = [], isLoading } = useAllProductDetails();
-    const collectionSlug = typeof params.collection === "string" ? params.collection : params.collection?.[0];
+    // param eg /t-shirt/men
+    // Extracting the section and category from the params (supports catch-all/arrays)
+    const shopCategory =
+        typeof params.category === "string" ? params.category : params.category?.[0];
+    const sectionSlug =
+        typeof params.section === "string" ? params.section : params.section?.[0];
 
-    // Find products where the product.collection.name matches the param
+    // Find products where the product section's category matches the param
     const filteredProducts = useMemo(() => {
         return products.filter(
-            (product: ProductFull) => product.collection?.name?.toLowerCase().includes(collectionSlug?.toLowerCase() || "")
+        (product: ProductFull) => {
+            const sectionMatch = product.category?.gender?.toLowerCase().includes(sectionSlug?.toLowerCase() || "");
+            const categoryMatch = product.category?.name?.toLowerCase().includes(shopCategory?.toLowerCase() || "");
+            return sectionMatch && categoryMatch;
+        }
         );
-    }, [products, collectionSlug]);
+    }, [products, shopCategory, sectionSlug]);
 
-    const collectionData = filteredProducts[0]?.collection;
+    const sectionData = filteredProducts[0]?.section;
 
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -42,7 +51,7 @@ export default function CollectionPage() {
                 />
                 <div className="flex gap-4 justify-center items-center h-full my-auto">
                     <h1 className="text-xl md:text-2xl lg:text-3xl capitalize leading-tight">
-                        {collectionData?.name ? collectionData.name : collectionSlug?.toString()}
+                        {sectionData?.name ? sectionData.name : shopCategory?.toString()} / {sectionSlug?.toString()}
                     </h1>
                 </div>
             </div>
@@ -52,7 +61,8 @@ export default function CollectionPage() {
                     items={[
                         { label: "Home", href: "/home" },
                         { label: "Shop", href: "/shop" },
-                        { label: `${collectionData?.name ? collectionData.name : collectionSlug?.toString()}` },
+                        { label: `${sectionData?.name ? sectionData.name : shopCategory?.toString()}`, href: `/shop/${shopCategory}` },
+                        { label: `${sectionSlug?.toString()}` },
                     ]}
                 />
                 <ShopDetails initialProducts={filteredProducts || []} />

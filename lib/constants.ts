@@ -34,3 +34,57 @@ export const COMMON_COLORS = [
     "Burgundy",
     "Olive",
 ]
+
+export const CATEGORIES = [
+    "T-Shirts",
+    "Hoodies",
+    "Cropped Hoodies",
+    "Tank Tops",
+    "Cropped Tank Tops",
+    "Tote Bags",
+];
+
+export const GENDERS = ["Men", "Women", "Kids"];
+
+export const COLLECTIONS = [
+    { label: "Imani Collection", slug: "imani" },
+    { label: "Heritage Collection", slug: "heritage" },
+];
+
+// build a nested menu structure for collections
+export function buildCollectionsMenu() {
+    return COLLECTIONS.map((collection) => ({
+        label: collection.label,
+        href: `/collections/${collection.slug}`,
+        items: CATEGORIES.map((category) => ({
+            label: category,
+            href: `/collections/${collection.slug}/${category.toLowerCase().replace(/\s+/g, "-")}`,
+            items: GENDERS.map((gender) => ({
+                label: gender,
+                href: `/collections/${collection.slug}/${category.toLowerCase().replace(/\s+/g, "-")}/${gender.toLowerCase()}`,
+            })),
+        })),
+    }));
+}
+
+// build a nested menu structure for categories with extra Tote bags item that has no gender
+export function buildCategoriesMenu() {
+    return CATEGORIES.map((category) => ({
+        label: category,
+        href: `/shop/${category.toLowerCase().replace(/\s+/g, "-")}`,
+        items: category === "Tote Bags"
+            ? []
+            : GENDERS.map((gender) => ({
+                label: gender,
+                href: `/shop/${category.toLowerCase().replace(/\s+/g, "-")}/${gender.toLowerCase()}`,
+            })),
+    }));
+}
+
+export function formatCollectionSlug(name: string) {
+    return name
+        .toLowerCase()
+        .replace(/\s*collection\s*$/, "") // remove trailing "collection"
+        .trim()
+        .replace(/\s+/g, "-"); // replace spaces with hyphens
+}

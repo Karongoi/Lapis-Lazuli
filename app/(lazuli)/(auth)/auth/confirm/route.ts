@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
             redirect(next);
         } else {
             const friendlyMessage = getFriendlyErrorMessage(error.message);
-            redirect(`/error?message=${encodeURIComponent(friendlyMessage)}`);
+            redirect(`/auth/error?message=${encodeURIComponent(friendlyMessage)}`);
         }
     } else {
-        redirect(`/error?message=${encodeURIComponent('Missing token or type')}`);
+        redirect(`/auth/error?message=${encodeURIComponent('Missing token or type')}`);
     }
 }

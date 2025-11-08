@@ -6,19 +6,19 @@ import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { ProductFull } from "@/lib/types";
 
-export default function CollectionPage() {
-    const params = useParams(); // works in client components for Next.js 13+
+export default function ShopCategoriesPage() {
+    const params = useParams();
     const { data: products = [], isLoading } = useAllProductDetails();
-    const collectionSlug = typeof params.collection === "string" ? params.collection : params.collection?.[0];
+    const categorySlug = typeof params.category === "string" ? params.category : params.category?.[0];
 
-    // Find products where the product.collection.name matches the param
+    // Find products where the product.category.name matches the param
     const filteredProducts = useMemo(() => {
         return products.filter(
-            (product: ProductFull) => product.collection?.name?.toLowerCase().includes(collectionSlug?.toLowerCase() || "")
+            (product: ProductFull) => product.category?.name?.toLowerCase().includes(categorySlug?.toLowerCase() || "")
         );
-    }, [products, collectionSlug]);
+    }, [products, categorySlug]);
 
-    const collectionData = filteredProducts[0]?.collection;
+    const categoryData = filteredProducts[0]?.category;
 
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -42,7 +42,7 @@ export default function CollectionPage() {
                 />
                 <div className="flex gap-4 justify-center items-center h-full my-auto">
                     <h1 className="text-xl md:text-2xl lg:text-3xl capitalize leading-tight">
-                        {collectionData?.name ? collectionData.name : collectionSlug?.toString()}
+                        {categoryData?.name ? categoryData.name : categorySlug?.toString()}
                     </h1>
                 </div>
             </div>
@@ -52,7 +52,7 @@ export default function CollectionPage() {
                     items={[
                         { label: "Home", href: "/home" },
                         { label: "Shop", href: "/shop" },
-                        { label: `${collectionData?.name ? collectionData.name : collectionSlug?.toString()}` },
+                        { label: `${categoryData?.name ? categoryData.name : categorySlug?.toString()}` },
                     ]}
                 />
                 <ShopDetails initialProducts={filteredProducts || []} />

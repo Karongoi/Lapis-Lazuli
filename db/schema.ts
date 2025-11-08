@@ -36,7 +36,7 @@ export const collections = pgTable("collections", {
 // CATEGORIES
 export const categories = pgTable("categories", {
     id: serial("id").primaryKey(),
-    name: varchar("name"), // e.g. T-Shirts, Hoodies
+    name: varchar("name"), // e.g. T-Shirts, Hoodies, Cropped Hoodies, Tank Tops, Cropped Tank Tops
     slug: varchar("slug").unique(),
     gender: varchar("gender"), // men, women, kids
     created_at: timestamp("created_at").defaultNow(),

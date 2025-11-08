@@ -1,14 +1,15 @@
-import { Product } from '@/lib/mockData'
+import { Category, Collection, ProductFull } from "./types"
 
-export function getUniqueColors(products: Product[]): string[] {
-    const colors = new Set(products.map((p) => p.color))
+
+export function getUniqueColors(products: ProductFull[]): string[] {
+    const colors = new Set(products.map((p) => p.variants[0].color))
     return Array.from(colors).sort()
 }
 
-export function getUniqueSizes(products: Product[]): string[] {
+export function getUniqueSizes(products: ProductFull[]): string[] {
     const sizes = new Set<string>()
     products.forEach((p) => {
-        p.availableSizes.forEach((size) => sizes.add(size))
+        p.variants.forEach((variant) => sizes.add(variant.size))
     })
     return Array.from(sizes).sort((a, b) => {
         // Custom sort for sizes
@@ -26,13 +27,13 @@ export function getUniqueSizes(products: Product[]): string[] {
 }
 
 export interface Filters {
-    categories: string[]
-    collections: string[]
+    categories: Category[]
+    collections: Collection[]
     sizes: string[]
     colors: string[]
 }
 
-export function filterProducts(products: Product[], filters: Filters): Product[] {
+export function filterProducts(products: ProductFull[], filters: Filters): ProductFull[] {
     return products.filter((product) => {
         // If no filters are selected, include all products
         if (
@@ -45,24 +46,23 @@ export function filterProducts(products: Product[], filters: Filters): Product[]
         }
 
         // Check category filter
-        if (filters.categories.length > 0 && !filters.categories.includes(product.categoryId)) {
+        if (filters.categories.length > 0 && !filters.categories.some((c) => c.id === product.category?.id)) {
             return false
         }
 
         // Check collection filter
-        if (filters.collections.length > 0 && !filters.collections.includes(product.collectionId)) {
+        if (filters.collections.length > 0 && !filters.collections.some((c) => c.id === product.collection?.id)) {
             return false
         }
 
         // Check color filter
-        if (filters.colors.length > 0 && !filters.colors.includes(product.color)) {
-            return false
+        if (filters.colors.length > 0 && !product.variants.some(v => filters.colors.includes(v.color))) {
+            return false;
         }
 
         // Check size filter
-        if (filters.sizes.length > 0) {
-            const hasSize = filters.sizes.some((size) => product.availableSizes.includes(size))
-            if (!hasSize) return false
+        if (filters.sizes.length > 0 && !product.variants.some(v => filters.sizes.includes(v.size))) {
+            return false;
         }
 
         return true
@@ -70,7 +70,7 @@ export function filterProducts(products: Product[], filters: Filters): Product[]
 }
 
 export function getFilterCounts(
-    products: Product[],
+    products: ProductFull[],
     filters: Filters,
     filterType: keyof Filters,
 ): { [key: string]: number } {
@@ -79,9 +79,9 @@ export function getFilterCounts(
     // Get all possible values for this filter type
     let allValues: string[] = []
     if (filterType === "categories") {
-        allValues = Array.from(new Set(products.map((p) => p.categoryId)))
+        allValues = Array.from(new Set(products.map((p) => p.category?.name || "")))
     } else if (filterType === "collections") {
-        allValues = Array.from(new Set(products.map((p) => p.collectionId)))
+        allValues = Array.from(new Set(products.map((p) => p.collection?.name || "")))
     } else if (filterType === "colors") {
         allValues = getUniqueColors(products)
     } else if (filterType === "sizes") {

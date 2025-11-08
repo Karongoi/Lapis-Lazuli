@@ -19,66 +19,36 @@ import {
 import { useAuth } from "@/context/AuthContext"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { buildCategoriesMenu, CATEGORIES, formatCollectionSlug, GENDERS } from "@/lib/constants"
+import { Collection } from "@/lib/types"
+import { useFetchCollections } from "@/hooks/useStore"
 
-const shopMenuItems = [
-    {
-        label: "Men",
-        items: [
-            { label: "Shirts", href: "/shop/men?q=${encodeURIComponent(searchQuery)}" },
-            { label: "Pants", href: "/shop/men/pants" },
-            { label: "Accessories", href: "/shop/men/accessories" },
-        ],
-        href: "/shop/men",
-    },
-    {
-        label: "Women",
-        items: [
-            { label: "Dresses", href: "/shop/women/dresses" },
-            { label: "Tops", href: "/shop/women/tops" },
-            { label: "Accessories", href: "/shop/women/accessories" },
-        ],
-        href: "/shop/women",
-    },
-    {
-        label: "Unisex",
-        items: [
-            { label: "Hoodies", href: "/shop/unisex/hoodies" },
-            { label: "T-Shirts", href: "/shop/unisex/tshirts" },
-            { label: "Accessories", href: "/shop/unisex/accessories" },
-        ],
-        href: "/shop/unisex",
-    },
-]
-
-const collectionsMenuItems = [
-    {
-        label: "Imani Collection",
-        items: [
-            { label: "Men", href: "/shop/collections/men" },
-            { label: "Women", href: "/shop/collections/women" },
-            { label: "Unisex", href: "/shop/collections/unisex" },
-        ],
-        href: "/collections/imani",
-    },
-    {
-        label: "Heritage Collection",
-        href: "/collections/heritage",
-    },
-    {
-        label: "Modern Collection",
-        href: "/collections/modern",
-    },
-    {
-        label: "Limited Edition",
-        href: "/collections/limited",
-    },
-]
+function buildCollectionsMenu(collections: Collection[] = []) {
+    return collections.map((collection) => {
+        const slug = formatCollectionSlug(collection.name);
+        return {
+            label: collection.name,
+            href: `/collections/${slug}`,
+            items: CATEGORIES.map((category) => ({
+                label: category,
+                href: `/collections/${slug}/${category.toLowerCase().replace(/\s+/g, "-")}`,
+                items: GENDERS.map((gender) => ({
+                    label: gender,
+                    href: `/collections/${slug}/${category.toLowerCase().replace(/\s+/g, "-")}/${gender.toLowerCase()}`,
+                })),
+            })),
+        };
+    });
+}
 
 export default function Navbar() {
     const router = useRouter()
     const { user, signOut } = useAuth();
     const [isSearchOpen, setIsSearchOpen] = useState(false)
     const queryClient = useQueryClient()
+    const { collections = [] } = useFetchCollections()
+    const collectionsMenuItems = buildCollectionsMenu(collections);
+    const shopMenuItems = buildCategoriesMenu()
 
     return (
         <div className="w-full flex items-center justify-between gap-8 p-4 md:px-8 font-jost">
