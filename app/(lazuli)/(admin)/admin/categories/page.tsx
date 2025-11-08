@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,22 +7,6 @@ import { useFetchCategories } from "@/hooks/useStore"
 
 export default function CategoriesPage() {
     const { categories, isCategoriesLoading } = useFetchCategories()
-    // useEffect(() => {
-    //     fetchCategories()
-    // }, [])
-
-    // async function fetchCategories() {
-    //     try {
-    //         const res = await fetch("/api/admin/categories")
-    //         if (!res.ok) throw new Error("Failed to fetch")
-    //         const result = await res.json()
-    //         setCategories(result.data || [])
-    //     } catch (err) {
-    //         console.error(err)
-    //     } finally {
-    //         setLoading(false)
-    //     }
-    // }
 
     async function handleDelete(id: number) {
         if (!confirm("Delete this category?")) return

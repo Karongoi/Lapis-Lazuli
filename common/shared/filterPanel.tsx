@@ -3,13 +3,13 @@ import { useState } from "react"
 import { ChevronDown, X, SlidersHorizontal } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { mockCategories ,mockCollections, Product } from "@/lib/mockData"
 import { getUniqueColors, getUniqueSizes, getFilterCounts, type Filters } from "@/lib/filterUtils"
+import { ProductFull, Category, Collection } from "@/lib/types"
 
 interface FilterPanelProps {
-    products: Product[]
+    products: ProductFull[]
     filters: Filters
-    onFilterChange: (filterType: keyof Filters, value: string) => void
+    onFilterChange: (filterType: keyof Filters, value: string | Category | Collection) => void
     isOpen?: boolean
     onClose?: () => void
 }
@@ -29,12 +29,35 @@ export function FilterPanel({ products, filters, onFilterChange, isOpen = true, 
         }))
     }
 
+    // Build unique categories (from product.full.category, filtering out nulls)
+    const categoriesArray: Category[] = Array.from(
+        new Map(
+            products
+                .map((p) => p.category)
+                .filter((c): c is Category => Boolean(c))
+                .map((c) => [c.id, c])
+        ).values()
+    )
+
+    // Likewise for collections
+    const collectionsArray: Collection[] = Array.from(
+        new Map(
+            products
+                .map((p) => p.collection)
+                .filter((c): c is Collection => Boolean(c))
+                .map((c) => [c.id, c])
+        ).values()
+    )
+
     const colors = getUniqueColors(products)
     const sizes = getUniqueSizes(products)
     const categoryCounts = getFilterCounts(products, filters, "categories")
     const collectionCounts = getFilterCounts(products, filters, "collections")
     const colorCounts = getFilterCounts(products, filters, "colors")
     const sizeCounts = getFilterCounts(products, filters, "sizes")
+
+    // Accept either object or string
+    type FilterSectionItem = Category | Collection | string
 
     const FilterSection = ({
         title,
@@ -43,7 +66,7 @@ export function FilterPanel({ products, filters, onFilterChange, isOpen = true, 
         counts,
     }: {
         title: string
-        items: Array<{ id: string; name: string }>
+        items: FilterSectionItem[]
         filterType: keyof Filters
         counts: { [key: string]: number }
     }) => (
@@ -58,19 +81,41 @@ export function FilterPanel({ products, filters, onFilterChange, isOpen = true, 
 
             {expandedSections[filterType] && (
                 <div className="mt-4 space-y-3">
-                    {items.map((item) => (
-                        <div key={item.id} className="flex items-center space-x-2">
-                            <Checkbox
-                                id={`${filterType}-${item.id}`}
-                                checked={filters[filterType].includes(item.id)}
-                                onCheckedChange={() => onFilterChange(filterType, item.id)}
-                            />
-                            <Label htmlFor={`${filterType}-${item.id}`} className="flex-1 cursor-pointer text-sm font-normal">
-                                {item.name}
-                            </Label>
-                            <span className="text-xs text-muted-foreground">({counts[item.id] || 0})</span>
-                        </div>
-                    ))}
+                    {items.map((item) => {
+                        // Category/Collection: object with id
+                        if (filterType === "categories" || filterType === "collections") {
+                            const obj = item as Category | Collection
+                            return (
+                                <div key={obj.id} className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`${filterType}-${obj.id}`}
+                                        checked={filters[filterType].some((f) => f.id === obj.id)}
+                                        onCheckedChange={() => onFilterChange(filterType, obj)}
+                                    />
+                                    <Label htmlFor={`${filterType}-${obj.id}`} className="flex-1 cursor-pointer text-sm font-normal">
+                                        {obj.name}
+                                    </Label>
+                                    <span className="text-xs text-muted-foreground">({counts[obj.name] || 0})</span>
+                                </div>
+                            )
+                        } else {
+                            // color/size: plain string
+                            const name = item as string
+                            return (
+                                <div key={name} className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`${filterType}-${name}`}
+                                        checked={(filters[filterType] as string[]).includes(name)}
+                                        onCheckedChange={() => onFilterChange(filterType, name)}
+                                    />
+                                    <Label htmlFor={`${filterType}-${name}`} className="flex-1 cursor-pointer text-sm font-normal">
+                                        {name}
+                                    </Label>
+                                    <span className="text-xs text-muted-foreground">({counts[name] || 0})</span>
+                                </div>
+                            )
+                        }
+                    })}
                 </div>
             )}
         </div>
@@ -94,28 +139,10 @@ export function FilterPanel({ products, filters, onFilterChange, isOpen = true, 
                 )}
             </div>
 
-            <FilterSection title="Category" items={mockCategories} filterType="categories" counts={categoryCounts} />
-
-            <FilterSection
-                title="Collection"
-                items={mockCollections.map((c) => ({ id: c.id, name: c.name }))}
-                filterType="collections"
-                counts={collectionCounts}
-            />
-
-            <FilterSection
-                title="Color"
-                items={colors.map((c) => ({ id: c, name: c }))}
-                filterType="colors"
-                counts={colorCounts}
-            />
-
-            <FilterSection
-                title="Size"
-                items={sizes.map((s) => ({ id: s, name: s }))}
-                filterType="sizes"
-                counts={sizeCounts}
-            />
+            <FilterSection title="Category" items={categoriesArray} filterType="categories" counts={categoryCounts} />
+            <FilterSection title="Collection" items={collectionsArray} filterType="collections" counts={collectionCounts} />
+            <FilterSection title="Color" items={colors} filterType="colors" counts={colorCounts} />
+            <FilterSection title="Size" items={sizes} filterType="sizes" counts={sizeCounts} />
         </>
     )
 

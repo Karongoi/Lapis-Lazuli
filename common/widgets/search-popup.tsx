@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { X } from "lucide-react"
-import { Product } from "@/lib/mockData"
+import { ProductFull } from "@/lib/types"
+import { useAllProductDetails } from "@/hooks/useFullProducts"
 
 interface SearchPopupProps {
     isOpen: boolean
@@ -12,31 +13,33 @@ interface SearchPopupProps {
 
 export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
     const [searchQuery, setSearchQuery] = useState("")
-    const [results, setResults] = useState<Product[]>([])
-    const [isLoading, setIsLoading] = useState(false)
+    const { data: products = [], isLoading } = useAllProductDetails()
+    const [debouncedQuery, setDebouncedQuery] = useState("")
 
     useEffect(() => {
-        if (!searchQuery.trim()) {
-            setResults([])
-            return
-        }
-
-        setIsLoading(true)
-        const timer = setTimeout(async () => {
-            try {
-                const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`)
-                const data = await response.json()
-                setResults(data.results)
-            } catch (error) {
-                console.error("Search error:", error)
-                setResults([])
-            } finally {
-                setIsLoading(false)
-            }
-        }, 300) // Debounce search
-
-        return () => clearTimeout(timer)
+        const timeout = setTimeout(() => setDebouncedQuery(searchQuery), 300)
+        return () => clearTimeout(timeout)
     }, [searchQuery])
+
+    // 🔍 Filter products locally
+    const results = useMemo(() => {
+        if (!debouncedQuery.trim()) return []
+        const query = debouncedQuery.toLowerCase()
+
+        return products.filter((p: ProductFull) => {
+            const searchableText = `
+          ${p.name}
+          ${p.design_name}
+          ${p.material || ""}
+          ${p.print_type || ""}
+          ${(p.variants || []).map(v => `${v.color} ${v.size}`).join(" ")}
+          ${p.collection?.name || ""}
+          ${p.category?.name || ""}
+        `.toLowerCase()
+
+            return searchableText.includes(query)
+        })
+    }, [debouncedQuery, products])
 
     if (!isOpen) return null
 
@@ -65,7 +68,7 @@ export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                         <input
                             type="text"
                             placeholder="Search by name, color, collection, or category..."
-                            value={searchQuery}
+                            value={debouncedQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             autoFocus
                             className="w-full px-4 py-3 border border-border rounded-lg bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -76,7 +79,7 @@ export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                     <div>
                         {isLoading && <p className="text-muted-foreground">Searching...</p>}
 
-                        {!isLoading && searchQuery && results.length === 0 && (
+                        {!isLoading && debouncedQuery && results.length === 0 && (
                             <p className="text-muted-foreground">No products found matching your search.</p>
                         )}
 
@@ -93,34 +96,34 @@ export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                                             key={product.id}
                                             href={`/product/${product.id}`}
                                             onClick={onClose}
-                                            className="group border border-border rounded-lg overflow-hidden hover:shadow-lg hover:shadow-primary/30 transition-shadow"
+                                            className="group border border-border rounded-sm overflow-hidden hover:shadow-lg hover:shadow-primary/30 transition-shadow"
                                         >
                                             <div className="aspect-square bg-muted overflow-hidden">
                                                 <img
-                                                    src={product.image || "/placeholder.svg"}
+                                                    src={product.media[0].media_url || "/placeholder.svg"}
                                                     alt={product.name}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                                                 />
                                             </div>
                                             <div className="p-3">
-                                                <h2 className="text-xs text-muted-foreground">{product.collectionId}</h2>
+                                                <h2 className="text-xs text-muted-foreground">{product.collection?.name}</h2>
                                                 <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors">
                                                     {product.name}
                                                 </h3>
-                                                <p className="text-sm mb-2">{product.color}</p>
-                                                <p className="font-bold text-secondary">KES {product.price.toFixed(2)}</p>
+                                                <p className="text-sm mb-2">{product.variants[0].color}</p>
+                                                <p className="font-bold text-secondary">KES {product.price}</p>
                                             </div>
                                         </Link>
                                     ))}
                                 </div>
 
                                 {/* View All Button */}
-                                {results.length > 8 && (
+                                {results.length > 1 && (
                                     <div className="flex justify-center">
                                         <Link
-                                            href={`/search?q=${encodeURIComponent(searchQuery)}`}
+                                            href={`/search?q=${encodeURIComponent(debouncedQuery)}`}
                                             onClick={onClose}
-                                            className="px-6 py-2 bg-foreground text-primary-foreground rounded-sm hover:bg-primary transition-colors font-semibold"
+                                            className="px-6 py-2 bg-foreground text-primary-foreground rounded-sm hover:bg-primary transition-colors"
                                         >
                                             View All Results
                                         </Link>
@@ -129,7 +132,7 @@ export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                             </>
                         )}
 
-                        {!searchQuery && (
+                        {!debouncedQuery && (
                             <p className="text-muted-foreground text-center py-8">Start typing to search for products...</p>
                         )}
                     </div>

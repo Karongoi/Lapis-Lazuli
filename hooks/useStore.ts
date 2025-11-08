@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 
 export const useFetchCollections = () => {
-    const { data: collections, error, isLoading: isCollectionsLoading } = useQuery({
+    const { data: collections = [], error, isLoading: isCollectionsLoading } = useQuery({
         queryKey: ["collections"],
         queryFn: async () => {
             const res = await fetch("/api/admin/collections")
@@ -16,7 +16,7 @@ export const useFetchCollections = () => {
 }
 
 export const useFetchCategories = () => {
-    const { data: categories, error, isLoading: isCategoriesLoading } = useQuery({
+    const { data: categories = [], error, isLoading: isCategoriesLoading } = useQuery({
         queryKey: ["categories"],
         queryFn: async () => {
             const res = await fetch("/api/admin/categories")
@@ -31,7 +31,7 @@ export const useFetchCategories = () => {
 }
 
 export const useFetchProducts = () => {
-    const { data: products, error, isLoading: isProductsLoading } = useQuery({
+    const { data: products = [], error, isLoading: isProductsLoading } = useQuery({
         queryKey: ["products"],
         queryFn: async () => {
             const res = await fetch("/api/admin/products")

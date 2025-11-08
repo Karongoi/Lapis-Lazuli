@@ -1,48 +1,51 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Product } from "@/lib/mockData"
 import { ProductCard } from "@/common/shared/productCard"
 import { Breadcrumb } from "@/components/breadcrumb"
 import { filterProducts } from "@/lib/filterUtils"
 import { useFilters } from "@/hooks/useFilters"
 import { ResponsiveFilterWrapper } from "@/common/shared/responsive-filter-wrapper"
 import { SelectedFilters } from "@/common/shared/selectedFilters"
+import { ProductFull } from "@/lib/types"
+import { useAllProductDetails } from "@/hooks/useFullProducts"
 
 export default function SearchPage() {
     const searchParams = useSearchParams()
     const query = searchParams.get("q") || ""
-    const [results, setResults] = useState<Product[]>([])
-    const [isLoading, setIsLoading] = useState(true)
+    const { data: products = [], isLoading } = useAllProductDetails()
+    const [debouncedQuery, setDebouncedQuery] = useState("")
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setDebouncedQuery(query), 300)
+        return () => clearTimeout(timeout)
+    }, [query])
+
+    // 🔍 Filter products locally
+    const results = useMemo(() => {
+        if (!debouncedQuery.trim()) return []
+        const query = debouncedQuery.toLowerCase()
+
+        return products.filter((p: ProductFull) => {
+            const searchableText = `
+          ${p.name}
+          ${p.design_name}
+          ${p.material || ""}
+          ${p.print_type || ""}
+          ${(p.variants || []).map(v => `${v.color} ${v.size}`).join(" ")}
+          ${p.collection?.name || ""}
+          ${p.category?.name || ""}
+        `.toLowerCase()
+
+            return searchableText.includes(query)
+        })
+    }, [debouncedQuery, products])
     const { filters, toggleFilter, clearFilter, clearAllFilters } = useFilters()
     const filteredProducts = filterProducts(results, filters)
 
-    useEffect(() => {
-        if (!query) {
-            setResults([])
-            setIsLoading(false)
-            return
-        }
-
-        const fetchResults = async () => {
-            try {
-                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
-                const data = await response.json()
-                setResults(data.results)
-            } catch (error) {
-                console.error("Search error:", error)
-                setResults([])
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchResults()
-    }, [query])
-
     return (
-        <div className="min-h-screen bg-background w-full px-4 py-12">
+        <div className="min-h-screen bg-background w-full px-4 pt-4 border-t border-border">
             <Breadcrumb
                 className="ml-10"
                 items={[
@@ -50,7 +53,7 @@ export default function SearchPage() {
                     { label: "Search" },
                 ]}
             />
-            <div className="flex flex-col md:flex-row w-full gap-6 p-6">
+            <div className="flex flex-col md:flex-row w-full gap-6 px-6">
                 <aside className="relative w-full max-w-[300px]">
                     <ResponsiveFilterWrapper products={results} filters={filters} onFilterChange={toggleFilter} />
                 </aside>
@@ -59,7 +62,7 @@ export default function SearchPage() {
                     <div className="max-w-6xl mx-auto">
                         {/* Header */}
                         <div className="mb-8">
-                            <h1 className="text-4xl font-bold mb-2">Search Results</h1>
+                            <h1 className="text-2xl font-bold mb-2">Search Results</h1>
                             <p className="text-sm text-muted-foreground"> {filteredProducts?.length} product{filteredProducts.length !== 1 ? "s" : ""} {query && `results for "${query}"`}</p>
                         </div>
 
@@ -82,7 +85,7 @@ export default function SearchPage() {
                                 <SelectedFilters filters={filters} onClearFilter={clearFilter} onClearAll={clearAllFilters} />
 
                                 {/* Product Grid */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                                     {filteredProducts.map((product) => (
                                         <ProductCard
                                             key={product.id}

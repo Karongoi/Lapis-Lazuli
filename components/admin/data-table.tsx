@@ -3,6 +3,7 @@ import type React from "react"
 
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { EditIcon, TrashIcon } from "lucide-react"
 
 interface Column {
     key: string
@@ -23,7 +24,7 @@ export function DataTable({ data, columns, onEdit, onDelete }: DataTableProps) {
         if (column.render) return column.render(value)
 
         if (value === null || value === undefined) return "-"
-        if (column.key.includes("price") || column.key.includes("discount")) return `$${Number(value).toFixed(2)}`
+        if (column.key.includes("price") || column.key.includes("discount")) return `KES ${Number(value).toFixed(2)}`
         if (column.key.includes("date") || column.key.includes("created")) return new Date(value).toLocaleDateString()
 
         return String(value)
@@ -52,13 +53,13 @@ export function DataTable({ data, columns, onEdit, onDelete }: DataTableProps) {
                                 <TableCell>
                                     <div className="flex gap-1">
                                         {onEdit && (
-                                            <Button variant="outline" size="sm" onClick={() => onEdit(row)}>
-                                                Edit
+                                            <Button variant="ghost" size="sm" onClick={() => onEdit(row)}>
+                                                <EditIcon className="h-4 w-4 text-secondary" />
                                             </Button>
                                         )}
                                         {onDelete && (
-                                            <Button variant="destructive" size="sm" onClick={() => onDelete(row)}>
-                                                Delete
+                                            <Button variant="ghost" size="sm" onClick={() => onDelete(row)}>
+                                                <TrashIcon className="h-4 w-4 text-destructive" />
                                             </Button>
                                         )}
                                     </div>
