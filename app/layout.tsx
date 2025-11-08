@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Jost } from "next/font/google";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/constants";
+import AppProvider from "./(providers)/AppProvider";
+import TanstackProvider from "./(providers)/QueryProvider";
+import { GlobalRouteLoader } from "@/common/widgets/GlobalLoader";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +48,13 @@ export default function RootLayout({
       <body
         className={`${jost.variable} antialiased text-foreground bg-background ${geistSans.variable} ${geistMono.variable}`}
       >
-        {children}
+        <GlobalRouteLoader />
+        <Toaster position="top-right" />
+        <AppProvider>
+          <TanstackProvider>
+            {children}
+          </TanstackProvider>
+        </AppProvider>
       </body>
     </html>
   );
