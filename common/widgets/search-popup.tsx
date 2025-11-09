@@ -71,7 +71,7 @@ export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                             value={debouncedQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             autoFocus
-                            className="w-full px-4 py-3 border border-border rounded-lg bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-4 py-3 border border-border rounded-md bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                     </div>
 
@@ -111,7 +111,7 @@ export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                                                     {product.name}
                                                 </h3>
                                                 <p className="text-sm mb-2">{product.variants[0].color}</p>
-                                                <p className="font-bold text-secondary">KES {product.price}</p>
+                                                <p className="font-semibold text-secondary">KES {product.price}</p>
                                             </div>
                                         </Link>
                                     ))}
@@ -123,7 +123,7 @@ export function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                                         <Link
                                             href={`/search?q=${encodeURIComponent(debouncedQuery)}`}
                                             onClick={onClose}
-                                            className="px-6 py-2 bg-foreground text-primary-foreground rounded-sm hover:bg-primary transition-colors"
+                                            className="px-6 py-2 bg-foreground text-primary-foreground hover:bg-primary transition-colors"
                                         >
                                             View All Results
                                         </Link>

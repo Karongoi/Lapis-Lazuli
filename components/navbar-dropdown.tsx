@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { ChevronDown, ChevronRight } from "lucide-react"
+import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react"
 
 interface DropdownItem {
     label: string
@@ -18,67 +18,130 @@ interface NavDropdownProps {
 export function NavDropdown({ label, items }: NavDropdownProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+    const [isMobile, setIsMobile] = useState(false)
 
-    const handleMouseEnter = () => {
-        setIsOpen(true)
-        const firstItemWithSubitems = items.find((item) => item.items && item.items.length > 0)
-        if (firstItemWithSubitems) {
-            setHoveredItem(firstItemWithSubitems.label)
-        }
+    // detect mobile vs desktop
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768)
+        handleResize()
+        window.addEventListener("resize", handleResize)
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
+
+    const currentSubitems =
+        hoveredItem && items.find((item) => item.label === hoveredItem)?.items
+            ? items.find((item) => item.label === hoveredItem)?.items || []
+            : []
+
+    // ---------- DESKTOP VIEW ----------
+    if (!isMobile) {
+        return (
+            <div
+                className="relative group"
+                onMouseEnter={() => setIsOpen(true)}
+                onMouseLeave={() => {
+                    setIsOpen(false)
+                    setHoveredItem(null)
+                }}
+            >
+                <button className="uppercase flex items-center gap-1 hover:text-secondary transition-colors">
+                    {label}
+                    <ChevronDown className="w-4 h-4" />
+                </button>
+
+                {isOpen && (
+                    <div className="absolute left-0 mt-0 bg-card z-50 flex">
+                        {/* Left column */}
+                        <div className="w-48 py-2 border-r border-border">
+                            {items.map((item) => (
+                                <Link
+                                    key={item.label}
+                                    href={item.href || "#"}
+                                    onMouseEnter={() =>
+                                        item.items?.length ? setHoveredItem(item.label) : null
+                                    }
+                                    className={`w-full px-4 py-2 text-left text-sm flex items-center justify-between transition-colors ${hoveredItem === item.label
+                                            ? "bg-muted text-foreground"
+                                            : "hover:bg-muted text-muted-foreground"
+                                        }`}
+                                >
+                                    {item.label}
+                                    {item.items && item.items.length > 0 && (
+                                        <ChevronRight className="w-4 h-4 ml-2" />
+                                    )}
+                                </Link>
+                            ))}
+                        </div>
+
+                        {/* Right column */}
+                        {currentSubitems.length > 0 && (
+                            <div className="w-56 py-2 px-4">
+                                <div className="space-y-1">
+                                    {currentSubitems.map((subitem) => (
+                                        <Link
+                                            key={subitem.label}
+                                            href={subitem.href || "#"}
+                                            className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
+                                        >
+                                            {subitem.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        )
     }
 
-    const handleMouseLeave = () => {
-        setIsOpen(false)
-        setHoveredItem(null)
-    }
-
-    const currentSubitems = hoveredItem ? items.find((item) => item.label === hoveredItem)?.items || [] : []
-
+    // ---------- MOBILE VIEW ----------
     return (
-        <div className="relative group" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <button className="uppercase flex items-center gap-1 hover:text-secondary transition-colors">
+        <div className="w-full text-center">
+            <button
+                onClick={() => setIsOpen((prev) => !prev)}
+                className="w-full flex items-center justify-between py-3 border-b border-border uppercase font-medium"
+            >
                 {label}
-                <ChevronDown className="w-4 h-4" />
+                {isOpen ? (
+                    <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                ) : (
+                    <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                )}
             </button>
 
             {isOpen && (
-                <div className="absolute left-0 mt-0 w-auto bg-card border border-border rounded-md shadow-sm z-50 flex">
-                    {/* Left column: Main menu items */}
-                    <div className="w-48 py-2 border-r border-border">
-                        {items.map((item) => (
-                            <Link
-                                key={item.label}
-                                href={item.href || "#"}
-                                onMouseEnter={() => {
-                                    if (item.items && item.items.length > 0) {
-                                        setHoveredItem(item.label)
-                                    }
-                                }}
-                                className={`w-full px-4 py-2 text-left text-sm transition-colors flex items-center justify-between ${hoveredItem === item.label ? "bg-muted text-foreground" : "hover:bg-muted text-muted-foreground"
-                                    }`}
-                            >
-                                {item.label}
-                                {item.items && item.items.length > 0 && <ChevronRight className="w-4 h-4 ml-2" />}
-                            </Link>
-                        ))}
-                    </div>
-
-                    {/* Right column: Subitems for hovered item */}
-                    {currentSubitems.length > 0 && (
-                        <div className="w-56 py-2 px-4">
-                            <div className="space-y-1">
-                                {currentSubitems.map((subitem) => (
-                                    <Link
-                                        key={subitem.label}
-                                        href={subitem.href || "#"}
-                                        className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
-                                    >
-                                        {subitem.label}
-                                    </Link>
-                                ))}
-                            </div>
+                <div className="flex flex-col bg-card/70 border-b border-border text-left">
+                    {items.map((item) => (
+                        <div key={item.label} className="flex flex-col">
+                            {item.items && item.items.length > 0 ? (
+                                <details className="group">
+                                    <summary className="cursor-pointer list-none flex items-center justify-between px-4 py-2 text-sm text-foreground hover:bg-muted transition">
+                                        {item.label}
+                                        <ChevronRight className="w-4 h-4 group-open:rotate-90 transition-transform" />
+                                    </summary>
+                                    <div className="pl-6 pb-2">
+                                        {item.items.map((sub) => (
+                                            <Link
+                                                key={sub.label}
+                                                href={sub.href || "#"}
+                                                className="block py-1 text-sm text-muted-foreground hover:text-foreground transition"
+                                            >
+                                                {sub.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </details>
+                            ) : (
+                                <Link
+                                    href={item.href || "#"}
+                                    className="block px-4 py-2 text-sm text-foreground hover:bg-muted transition"
+                                >
+                                    {item.label}
+                                </Link>
+                            )}
                         </div>
-                    )}
+                    ))}
                 </div>
             )}
         </div>
