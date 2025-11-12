@@ -1,3 +1,4 @@
+import { getProductFull } from "@/lib/fetchProductDetails"
 import { useQuery } from "@tanstack/react-query"
 
 export const useFetchCollections = () => {
@@ -43,4 +44,13 @@ export const useFetchProducts = () => {
         gcTime: 1000 * 60 * 10,
     })
     return { products, error, isProductsLoading }
+}
+
+export function useProductFull(productId: number) {
+    return useQuery({
+        queryKey: ["product-full", productId],
+        queryFn: () => getProductFull(productId),
+        staleTime: 5 * 60 * 1000,
+        gcTime: 1000 * 60 * 10,
+    });
 }

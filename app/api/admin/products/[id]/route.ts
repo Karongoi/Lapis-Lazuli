@@ -3,9 +3,9 @@ import { getProductById, updateProduct, deleteProduct } from "@/db/products"
 import { deleteProductVariants, createVariant } from "@/db/variants"
 import { deleteProductMedia, createMedia } from "@/db/media"
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params
+    const { id } = params
     const data = await getProductById(Number.parseInt(id))
     if (!data) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 })

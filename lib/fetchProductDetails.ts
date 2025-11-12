@@ -38,3 +38,38 @@ export async function fetchAllProductsFullWithMeta() {
 
     return await Promise.all(detailPromises);
 }
+
+export async function getProductFull(productId: number): Promise<ProductFull | null> {
+    console.log('Fetching full details for product ID:', productId);
+    // Fetch the product, its variants, and its media in parallel
+    const [productRes, variantsRes, mediaRes, collectionsRes, categoriesRes] = await Promise.all([
+        fetch(`/api/admin/products/${productId}`),
+        fetch(`/api/admin/products/${productId}/variants`),
+        fetch(`/api/admin/products/${productId}/media`),
+        fetch("/api/admin/collections"),
+        fetch("/api/admin/categories"),
+    ]);
+
+    console.log('productRes', productRes);
+    console.log('variantsRes', variantsRes);
+    console.log('mediaRes', mediaRes);
+    console.log('collectionsRes', collectionsRes);
+    console.log('categoriesRes', categoriesRes);
+    // Check for base product existence
+    if (!productRes.ok) {
+        console.error(`Product ${productId} not found`);
+        return null;
+    }
+
+    const { data: product } = await productRes.json();
+    const variants = variantsRes.ok ? await variantsRes.json() : [];
+    const media = mediaRes.ok ? await mediaRes.json() : [];
+
+    const { data: collections } = collectionsRes.ok ? await collectionsRes.json() : { data: [] };
+    const { data: categories } = categoriesRes.ok ? await categoriesRes.json() : { data: [] };
+
+    const collection = collections.find((c: Collection) => c.id === product.collection_id) || null;
+    const category = categories.find((c: Category) => c.id === product.category_id) || null;
+
+    return { ...product, variants, media, collection, category };
+}

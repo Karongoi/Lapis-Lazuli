@@ -26,7 +26,6 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import {
     buildCategoriesMenu,
-    buildSectionsMenu,
     CATEGORIES,
     formatCollectionSlug,
     GENDERS,
@@ -63,9 +62,9 @@ export default function Navbar() {
     const shopMenuItems = buildCategoriesMenu();
 
     // Build gender-based menus
-    const menMenuItems = buildSectionsMenu("men")
-    const womenMenuItems = buildSectionsMenu("women")
-    const kidsMenuItems = buildSectionsMenu("kids")
+    // const menMenuItems = buildSectionsMenu("men")
+    // const womenMenuItems = buildSectionsMenu("women")
+    // const kidsMenuItems = buildSectionsMenu("kids")
     return (
         <header className="relative z-50 w-full font-jost bg-background border-b border-gray-200">
             <div className="flex items-center justify-between gap-4 p-4 md:px-8">
