@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
     pgTable,
     uuid,
@@ -105,6 +106,7 @@ export const cart_items = pgTable("cart_items", {
     cart_id: integer("cart_id").references(() => carts.id),
     product_variant_id: integer("product_variant_id").references(() => product_variants.id),
     quantity: integer("quantity"),
+    unit_price: numeric("unit_price", { precision: 10, scale: 2 }),
 });
 
 // ORDERS
@@ -199,3 +201,38 @@ export const analytics = pgTable("analytics", {
     action: varchar("action"), // view, add_to_cart, checkout, purchase
     created_at: timestamp("created_at").defaultNow(),
 });
+
+// Cart to CartItems
+export const cartsRelations = relations(carts, ({ many }) => ({
+    items: many(cart_items),
+}));
+
+// CartItem to Cart, ProductVariant
+export const cartItemsRelations = relations(cart_items, ({ one }) => ({
+    cart: one(carts, { fields: [cart_items.cart_id], references: [carts.id] }),
+    variant: one(product_variants, { fields: [cart_items.product_variant_id], references: [product_variants.id] }),
+}));
+
+// ProductVariant to Product
+export const productVariantsRelations = relations(product_variants, ({ one, many }) => ({
+    product: one(products, { fields: [product_variants.product_id], references: [products.id] }),
+    cart_items: many(cart_items),
+}));
+
+// Product to ProductMedia
+export const productsRelations = relations(products, ({ many }) => ({
+    media: many(product_media),
+}));
+
+// ProductMedia to Product
+export const productMediaRelations = relations(product_media, ({ one }) => ({
+    product: one(products, { fields: [product_media.product_id], references: [products.id] }),
+}));
+
+// Review to User
+export const reviewsRelations = relations(reviews, ({ one }) => ({
+    author: one(profiles, {
+        fields: [reviews.user_id],
+        references: [profiles.id],
+    }),
+}));

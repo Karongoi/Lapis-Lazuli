@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "db:generate": "dotenv drizzle-kit generate",
+    "db:migrate": "dotenv drizzle-kit migrate",
+    "db:studio": "dotenv drizzle-kit studio",
     "db:push": "dotenv drizzle-kit push",
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

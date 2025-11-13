@@ -43,6 +43,13 @@
       "when": 1761931190837,
       "tag": "0005_update-user-id-to-text",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1763056322243,
+      "tag": "0006_lonely_ink",
+      "breakpoints": true
     }
   ]
 }
