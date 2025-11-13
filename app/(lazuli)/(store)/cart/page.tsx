@@ -1,0 +1,107 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { useCart } from "@/hooks/useCart"
+import { Button } from "@/components/ui/button"
+import { ShoppingBag } from "lucide-react"
+import toast from "react-hot-toast"
+import { Breadcrumb } from "@/components/breadcrumb"
+import { CartItems } from "@/components/storefront/cart-items"
+import { OrderSummary } from "@/components/storefront/order-summary"
+import { CartItem } from "@/lib/types"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
+
+export default function CartPage() {
+    const { cart, loading, updateItem, removeItem } = useCart()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted || loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <LoadingSkeleton />
+            </div>
+        )
+    }
+
+    if (!cart || cart.items.length === 0) {
+        return (
+            <main className="min-h-screen bg-background">
+                <div className="w-full">
+                    <div className="p-4 bg-primary/10 flex flex-col gap-2 items-center justify-between">
+                        <h1 className="text-2xl">My Shopping Cart</h1>
+                        <Breadcrumb
+                            className="capitalize"
+                            items={[
+                                { label: "Home", href: "/home" },
+                                { label: "Shop", href: "/shop" },
+                                { label: 'Cart' },
+                            ]}
+                        />
+                    </div>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center justify-center">
+                        <ShoppingBag className="h-16 w-16 text-gray-300 mb-4" />
+                        <p className="text-xl text-gray-600 mb-6">Your cart is empty</p>
+                        <Link href="/shop">
+                            <Button>Continue Shopping</Button>
+                        </Link>
+                    </div>
+                </div>
+            </main>
+        )
+    }
+
+    const handleUpdateQuantity = async (itemId: number, newQuantity: number) => {
+        if (newQuantity < 1) return
+        try {
+            await updateItem(itemId, newQuantity)
+            toast.success("Quantity updated successfully")
+
+        } catch (error) {
+            toast.error("Failed to update quantity")
+        }
+    }
+
+    const handleRemoveItem = async (itemId: number) => {
+        try {
+            await removeItem(itemId)
+            toast.success("Item removed from cart")
+        } catch (error) {
+            toast.error("Failed to remove item")
+        }
+    }
+
+    const subtotal = cart.items.reduce((acc, item) => {
+        return acc + Number.parseFloat(item.variant.price) * item.quantity
+    }, 0)
+
+    const tax = subtotal * 0.1
+    const total = subtotal + tax
+
+    return (
+        <main className="min-h-screen bg-background">
+            <div className="w-full">
+                <div className="p-4 bg-primary/10 flex flex-col gap-2 items-center justify-between">
+                    <h1 className="text-2xl">My Shopping Cart</h1>
+                    <Breadcrumb
+                        className="capitalize"
+                        items={[
+                            { label: "Home", href: "/home" },
+                            { label: "Shop", href: "/shop" },
+                            { label: 'Cart' },
+                        ]}
+                    />
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <CartItems items={cart.items as CartItem[]} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={handleRemoveItem} />
+                    <OrderSummary subtotal={subtotal} tax={tax} total={total} />
+                </div>
+            </div>
+        </main>
+    )
+}
