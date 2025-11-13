@@ -12,6 +12,7 @@ import { ProductCareSection } from "./product-care"
 import { ProductShippingSection } from "./product-shipping"
 import { Accordion, AccordionItem, AccordionTrigger } from "../ui/accordion"
 import { AccordionContent } from "@radix-ui/react-accordion"
+import { AddToCartButton } from "./add-cart-button"
 
 interface ProductInfoProps {
     product: ProductFull
@@ -83,24 +84,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
                     <span className="text-sm flex gap-2 font-medium">
                         <InfoIcon className="w-4 h-4" />We recommend ordering your actual size
                     </span>
-                    <div className="flex w-full items-center gap-8">
-                        <div className="flex items-center border border-border">
-                            <button
-                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="px-3 py-2 hover:bg-muted border-r transition-colors"
-                            >
-                                −
-                            </button>
-                            <span className="px-4 py-2 font-medium">{quantity}</span>
-                            <button onClick={() => setQuantity(quantity + 1)}
-                                className="px-3 py-2 hover:bg-muted border-l transition-colors">
-                                +
-                            </button>
-                        </div>
-                        <Button onClick={handleAddToCart} disabled={!selectedVariant || isAdding} size="lg" className="w-full md:max-w-[300px] shrink-1">
-                            {isAdding ? "Adding..." : "Add to Cart"}
-                        </Button>
-                    </div>
+                    <AddToCartButton
+                        variantId={selectedVariant ? selectedVariant.id : 0}
+                        variantName={selectedVariant ? `${product.name} - ${selectedVariant.color} / ${selectedVariant.size}` : ''}
+                        stock={selectedVariant ? selectedVariant.stock : 0}
+                        disabled={!selectedVariant || isAdding}
+                    />
                 </div>
 
             </div>

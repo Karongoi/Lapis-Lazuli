@@ -21,7 +21,7 @@ export function ProductImageGallery({ media, productName }: ProductImageGalleryP
     }
 
     return (
-        <div className="w-full flex flex-col md:flex-row-reverse gap-4 md:gap-6 lg:gap-8">
+        <div className="w-full md:sticky top-0 h-auto flex flex-col md:flex-row-reverse gap-4 md:gap-6 lg:gap-8">
             {/* Main Image */}
             <div className="bg-muted aspect-square max-h-[60vh] md:aspect-auto overflow-hidden">
                 {selectedImage && (

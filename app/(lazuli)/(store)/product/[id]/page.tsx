@@ -5,6 +5,7 @@ import { notFound, useParams } from "next/navigation"
 import { useProductFull } from "@/hooks/useStore"
 import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 import { Breadcrumb } from "@/components/breadcrumb"
+import { ReviewsSection } from "@/components/storefront/reviews-section"
 
 export default function ProductPage() {
     const params = useParams()
@@ -27,7 +28,7 @@ export default function ProductPage() {
 
     return (
         <main className="min-h-screen w-full bg-background">
-            <div className="p-4 bg-primary/30">
+            <div className="p-4 bg-primary/10">
                 <Breadcrumb
                     className="ml-10 capitalize"
                     items={[
@@ -38,14 +39,17 @@ export default function ProductPage() {
                 />
             </div>
             <div className="w-full max-w-6xl mx-auto py-8 px-4 md:px-8">
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <div className="w-full relative grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                     {/* Image Gallery */}
                     <ProductImageGallery media={product.media} productName={product.name} />
 
                     {/* Product Info */}
                     <ProductInfo product={product} />
                 </div>
+                <ReviewsSection productId={product.id} />
             </div>
+
+            {/* Related Products */}
         </main>
     )
 }

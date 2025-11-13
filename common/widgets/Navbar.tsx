@@ -32,6 +32,7 @@ import {
 } from "@/lib/constants";
 import { useFetchCollections } from "@/hooks/useStore";
 import { Collection } from "@/lib/types";
+import { useCart } from "@/hooks/useCart";
 
 function buildCollectionsMenu(collections: Collection[] = []) {
     return collections.map((collection) => {
@@ -58,8 +59,11 @@ export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const queryClient = useQueryClient();
     const { collections = [] } = useFetchCollections();
-    const collectionsMenuItems = buildCollectionsMenu(collections);
-    const shopMenuItems = buildCategoriesMenu();
+    const { cart } = useCart()
+    const collectionsMenuItems = buildCollectionsMenu(collections)
+    const shopMenuItems = buildCategoriesMenu()
+
+    const cartItemCount = cart?.items?.length || 0
 
     // Build gender-based menus
     // const menMenuItems = buildSectionsMenu("men")
@@ -116,8 +120,13 @@ export default function Navbar() {
                     <Link className="hover:text-secondary" href="/favorites">
                         <HeartIcon />
                     </Link>
-                    <Link className="hover:text-secondary" href="/cart">
+                    <Link className="relative hover:text-secondary transition-colors" href="/cart">
                         <CartIcon />
+                        {cartItemCount > 0 && (
+                            <span className="absolute -top-3 -right-3 -z-1 bg-secondary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                {cartItemCount > 99 ? "99+" : cartItemCount}
+                            </span>
+                        )}
                     </Link>
 
                     {/* Profile dropdown */}
