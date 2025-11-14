@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getCategoryById, updateCategory, deleteCategory } from "@/lib/db/categories"
+import { getCategoryById, updateCategory, deleteCategory } from "@/db/categories"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
