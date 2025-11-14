@@ -33,25 +33,26 @@ export default function SignupPage() {
         })
     }
     return (
-        <div className="relative flex items-center justify-center min-h-screen w-screen overflow-hidden">
+        <div className="relative flex items-center min-h-screen w-screen overflow-hidden">
             {/* Background image */}
             <Image
                 src={bgImage}
                 alt="Background"
-                fill
                 priority
-                className="object-cover opacity-70"
+                className="hidden sm:block object-cover h-screen w-full opacity-70"
             />
+            <span className='absolute left-6 bottom-6 italic'>Lapis Lazuli Threads &copy;2025</span>
 
             {/* Grain overlay (above image) */}
             <GrainOverlay />
 
             {/* Form container */}
-            <div className=" relative z-20  bg-background w-full max-w-sm md:max-w-lg p-8 md:px-12 py-12 flex flex-col gap-2 rounded-none md:absolute md:right-0 md:top-0 md:h-full md:justify-center"
+            <div
+                className="relative z-20 bg-background w-full lg:w-[45%] p-8 md:px-12 py-12 flex flex-col items-center gap-2 h-screen justify-center"
             >
                 <h1 className="text-md md:text-xl font-bold text-center">Welcome to <span className=''>Lapis Lazuli</span></h1>
                 <p className='text-center'>Create your account</p>
-                <form onSubmit={handleSubmit} className="flex flex-col text-sm gap-5 mt-8">
+                <form onSubmit={handleSubmit} className="flex flex-col text-sm w-full max-w-sm mx-auto gap-5 mt-8">
                     <input type="hidden" name="next" value={next} />
 
                     <input
