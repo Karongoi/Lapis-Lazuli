@@ -80,3 +80,47 @@ export interface ProductFull extends Product {
     collection: Collection | null;
     category: Category | null;
 }
+
+// Cart Item
+export interface CartItem {
+    id: number
+    quantity: number
+    variant: {
+        id: number
+        color: string
+        size: string
+        sku: string
+        price: string
+        stock: number
+        product: {
+            id: number
+            name: string
+            image_url?: string
+            media: ProductMedia[]
+        }
+    }
+}
+
+export interface Cart {
+    id: number
+    items: CartItem[]
+    total: number
+}
+
+// Review
+export interface Review {
+    id: number
+    rating: number
+    comment: string
+    author: {
+        full_name: string
+        email: string
+    }
+    created_at: string
+}
+
+export interface ReviewsData {
+    reviews: Review[]
+    averageRating: number
+    count: number
+}

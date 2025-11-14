@@ -15,6 +15,7 @@ import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 export default function CartPage() {
     const { cart, loading, updateItem, removeItem } = useCart()
     const [mounted, setMounted] = useState(false)
+    const [coupon, setCoupon] = useState("")
 
     useEffect(() => {
         setMounted(true)
@@ -79,7 +80,7 @@ export default function CartPage() {
         return acc + Number.parseFloat(item.variant.price) * item.quantity
     }, 0)
 
-    const tax = subtotal * 0.1
+    const tax = 0
     const total = subtotal + tax
 
     return (
@@ -98,8 +99,27 @@ export default function CartPage() {
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <CartItems items={cart.items as CartItem[]} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={handleRemoveItem} />
-                    <OrderSummary subtotal={subtotal} tax={tax} total={total} />
+                    <div className="w-full lg:col-span-2">
+                        <CartItems
+                            items={cart.items as CartItem[]}
+                            onUpdateQuantity={handleUpdateQuantity}
+                            onRemoveItem={handleRemoveItem}
+                        />
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                            <h2 className="text-lg mb-2">Have a coupon code?</h2>
+                            <div className="flex gap-4">
+                                <input type="text" placeholder="Enter coupon code" className="w-full p-2 border border-border" />
+                                <Button size={'lg'}>Apply Coupon</Button>
+                            </div>
+                        </div>
+                    </div>
+                    <OrderSummary
+                        // cart items total quantity
+                        items={cart.items.reduce((acc, item) => acc + item.quantity, 0)}
+                        discount={0}
+                        subtotal={subtotal}
+                        total={total}
+                    />
                 </div>
             </div>
         </main>

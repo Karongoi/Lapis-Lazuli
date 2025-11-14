@@ -41,11 +41,11 @@ export function CartItems({ items, onUpdateQuantity, onRemoveItem }: CartItemsPr
     }
 
     return (
-        <div className="lg:col-span-2">
+        <div className="w-full">
             {/* <Link href="/shop" className="mt-6 inline-block">
                 Continue Shopping
             </Link> */}
-            <div className="space-y-4 border-y p-6">
+            <div className="space-y-4 border-y px-3 py-3 sm:py-6 md:px-0 lg:p-6">
                 {items.map((item: CartItem) => {
                     const primaryImage =
                         item.variant.product.media?.find((media: ProductMedia) => media.is_primary)?.media_url || item.variant.product.media?.[0]?.media_url
@@ -90,6 +90,7 @@ export function CartItems({ items, onUpdateQuantity, onRemoveItem }: CartItemsPr
                                     <p className="text-sm text-gray-600">SKU: {item.variant.sku}</p>
                                 </div>
 
+                                <div className="flex flex-col sm:flex-row justify-between md:justify-evenly items-start md:items-center gap-2 w-full">
                                 {/* Price */}
                                 <p className="font-semibold mt-2 md:mt-0">KES {Number.parseFloat(item.variant.price).toFixed(2)}</p>
 
@@ -112,7 +113,8 @@ export function CartItems({ items, onUpdateQuantity, onRemoveItem }: CartItemsPr
                                     </button>
                                 </div>
                                 {/* Total Price */}
-                                <p className="font-semibold mt-2">KES {Number.parseFloat((Number.parseFloat(item.variant.price) * item.quantity).toFixed(2))}</p>
+                                    <p className="font-semibold">KES {Number.parseFloat((Number.parseFloat(item.variant.price) * item.quantity).toFixed(2))}</p>
+                                </div>
                             </div>
                         </div>
                     )
