@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DataTable } from "@/components/admin/data-table"
 import { useFetchProducts } from "@/hooks/useStore"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export default function ProductsPage() {
     const router = useRouter()
@@ -71,7 +72,7 @@ export default function ProductsPage() {
                 </CardHeader>
                 <CardContent>
                     {isProductsLoading ? (
-                        <div className="py-8 text-center text-muted-foreground">Loading...</div>
+                        <div className="py-8 text-center text-muted-foreground"><LoadingSkeleton /></div>
                     ) : (
                         <DataTable
                             data={products}

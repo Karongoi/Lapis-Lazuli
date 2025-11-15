@@ -14,6 +14,7 @@ import { CLOTHING_SIZES } from "@/lib/constants"
 import { MediaItem, ProductFormProps, Variant } from "@/lib/types"
 import { CloudinaryUpload } from "./upload-form"
 import toast from "react-hot-toast"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export function ProductForm({ productId, collections, categories }: ProductFormProps) {
     const router = useRouter()
@@ -174,7 +175,7 @@ export function ProductForm({ productId, collections, categories }: ProductFormP
         }
     }, [formData.name, newVariant.color, newVariant.size])
 
-    if (loading) return <div className="py-8 text-center">Loading...</div>
+    if (loading) return <div className="py-8 text-center"><LoadingSkeleton /></div>
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">

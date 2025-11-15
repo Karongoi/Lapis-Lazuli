@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getPromotions, createPromotion } from "@/db/promotions"
+import { PromotionSchema } from "@/schemas/promotion"
 
 export async function GET() {
   try {
@@ -14,7 +15,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const data = await createPromotion(body)
+    const parsed = PromotionSchema.parse(body)
+    console.log('POST /admin/promotions body', body)
+    const data = await createPromotion(parsed)
     return NextResponse.json({ success: true, data }, { status: 201 })
   } catch (error) {
     console.error("[API] POST /admin/promotions", error)

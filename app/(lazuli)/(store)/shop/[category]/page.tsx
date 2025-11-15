@@ -5,6 +5,7 @@ import { useAllProductDetails } from "@/hooks/useFullProducts";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { ProductFull } from "@/lib/types";
+import LoadingSkeleton from "@/common/shared/loadingSkeleton";
 
 export default function ShopCategoriesPage() {
     const params = useParams();
@@ -21,11 +22,11 @@ export default function ShopCategoriesPage() {
     const categoryData = filteredProducts[0]?.category;
 
     if (isLoading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+        return <div className="min-h-screen flex items-center justify-center"><LoadingSkeleton /></div>;
     }
 
     return (
-        <div className="min-h-screen bg-background w-full pt-4">
+        <div className="min-h-screen bg-background w-full">
             <div className="relative bg-primary/10 h-20">
                 <div
                     className="absolute inset-0 z-0"

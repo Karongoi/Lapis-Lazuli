@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useFetchCategories } from "@/hooks/useStore"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export default function CategoriesPage() {
     const { categories, isCategoriesLoading } = useFetchCategories()
@@ -33,7 +34,7 @@ export default function CategoriesPage() {
                 </CardHeader>
                 <CardContent>
                     {isCategoriesLoading ? (
-                        <div className="py-8 text-center text-muted-foreground">Loading...</div>
+                        <div className="py-8 text-center text-muted-foreground"><LoadingSkeleton /></div>
                     ) : (
                         <div className="space-y-4">
                             {categories.map((category: any) => (

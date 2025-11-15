@@ -7,6 +7,7 @@ import Image from 'next/image';
 import bgImage from '@/public/images/background.png'
 import toast from 'react-hot-toast';
 import { useTransition } from 'react';
+import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
     const searchParams = useSearchParams()
@@ -61,15 +62,15 @@ export default function LoginPage() {
                 <h1 className="text-md md:text-xl lg:text-2xl font-bold text-center">Welcome to <span className=''>Lapis Lazuli</span></h1>
                 <p className='text-center'>Sign in to your account</p>
                 <form onSubmit={handleSubmit} className="flex flex-col text-sm w-full max-w-sm mx-auto gap-5 mt-8">
-                    <input type="hidden" name="next" value={next} />
+                    <Input type="hidden" name="next" value={next} />
 
-                    <input
+                    <Input
                         type="email"
                         name="email"
                         placeholder="Enter email"
                         className="px-4 py-2 rounded-sm bg-primary-foreground border border-secondary-foreground/10"
                     />
-                    <input
+                    <Input
                         type="password"
                         name="password"
                         placeholder="Enter password"

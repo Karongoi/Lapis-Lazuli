@@ -14,6 +14,21 @@ export default function ShopPage() {
 
     return (
         <div className="min-h-100vh w-full px-4 pt-4 border-t border-border">
+            <div className="relative bg-primary/10 h-10">
+                <div
+                    className="absolute inset-0 z-0"
+                    style={{
+                        backgroundImage: `
+        radial-gradient(circle, rgba(236,72,153,0.15) 6px, transparent 7px),
+        radial-gradient(circle, rgba(59,130,246,0.15) 6px, transparent 7px),
+        radial-gradient(circle, rgba(16,185,129,0.15) 6px, transparent 7px),
+        radial-gradient(circle, rgba(245,158,11,0.15) 6px, transparent 7px)
+      `,
+                        backgroundSize: "60px 60px",
+                        backgroundPosition: "0 0, 30px 30px, 30px 0, 0 30px",
+                    }}
+                />
+                </div>
             <Breadcrumb
                 className="ml-8"
                 items={[

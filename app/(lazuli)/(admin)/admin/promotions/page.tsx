@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export default function PromotionsPage() {
     const [promotions, setPromotions] = useState([])
@@ -51,7 +52,7 @@ export default function PromotionsPage() {
                 </CardHeader>
                 <CardContent>
                     {loading ? (
-                        <div className="py-8 text-center text-muted-foreground">Loading...</div>
+                        <div className="py-8 text-center text-muted-foreground"><LoadingSkeleton /></div>
                     ) : (
                         <div className="space-y-4">
                             {promotions.map((promotion: any) => (

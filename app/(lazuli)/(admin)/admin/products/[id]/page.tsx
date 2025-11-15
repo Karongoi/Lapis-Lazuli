@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ProductForm } from "@/components/admin/product-form"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export default function EditProductPage() {
     const params = useParams()
@@ -25,7 +26,7 @@ export default function EditProductPage() {
             .finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <div className="py-8 text-center">Loading...</div>
+    if (loading) return <div className="py-8 text-center"><LoadingSkeleton /></div>
 
     return (
         <div className="space-y-6">
