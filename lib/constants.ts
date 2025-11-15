@@ -88,3 +88,12 @@ export function formatCollectionSlug(name: string) {
         .trim()
         .replace(/\s+/g, "-"); // replace spaces with hyphens
 }
+
+export function toInputDate(value: string | null) {
+    if (!value) return ""
+    const d = new Date(value)
+    const offset = d.getTimezoneOffset()
+    // Adjust for timezone to get local time
+    const local = new Date(d.getTime() - offset * 60 * 1000)
+    return local.toISOString().slice(0, 16) // "YYYY-MM-DDTHH:mm"
+}

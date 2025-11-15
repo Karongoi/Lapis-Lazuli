@@ -124,3 +124,10 @@ export interface ReviewsData {
     averageRating: number
     count: number
 }
+
+export interface BillingDetails {
+    fullName: string
+    email: string
+    phone: string
+    address: string
+}

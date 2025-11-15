@@ -115,13 +115,13 @@ export default function CartPage() {
                             onUpdateQuantity={handleUpdateQuantity}
                             onRemoveItem={handleRemoveItem}
                         />
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                             <h2 className="text-lg mb-2">Have a coupon code?</h2>
                             <div className="flex gap-4">
                                 <input type="text" placeholder="Enter coupon code" className="w-full p-2 border border-border" value={coupon} onChange={(e) => setCoupon(e.target.value)} />
                                 <Button size={'lg'} onClick={() => applyCoupon(coupon)}>Apply Coupon</Button>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <OrderSummary
                         // cart items total quantity

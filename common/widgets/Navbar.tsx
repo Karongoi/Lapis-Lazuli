@@ -70,7 +70,7 @@ export default function Navbar() {
     // const womenMenuItems = buildSectionsMenu("women")
     // const kidsMenuItems = buildSectionsMenu("kids")
     return (
-        <header className="relative z-50 w-full font-jost bg-background border-b border-gray-200">
+        <header className="relative z-50 w-full font-jost bg-background">
             <div className="flex items-center justify-between gap-4 p-4 md:px-8">
                 {/* Left: Logo */}
                 <Link href="/home" className="flex-shrink-0">
@@ -84,7 +84,7 @@ export default function Navbar() {
                 </Link>
 
                 {/* Middle: Desktop Menu */}
-                <nav className="hidden md:block bg-primary/10 px-6 py-2 rounded-full">
+                <nav className="hidden md:block bg-primary/20 px-6 py-2 rounded-full">
                     <ul className="flex gap-8 text-sm items-center">
                         <li>
                             <NavDropdown label="Shop" items={shopMenuItems} />
