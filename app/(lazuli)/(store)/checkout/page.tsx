@@ -33,7 +33,7 @@ export default function CheckoutPage() {
 
     if (!cart || cart.items.length === 0) {
         return (
-            <main className="min-h-screen bg-background flex items-center justify-center">
+            <main className="min-h-screen bg-background">
                 <div className="w-full text-center">
                     <div className="p-4 bg-primary/20 flex flex-col gap-2 items-center justify-between">
                         <div className="flex gap-2 items-center">
@@ -52,10 +52,13 @@ export default function CheckoutPage() {
                             ]}
                         />
                     </div>
-                    <h1 className="text-2xl font-semibold mb-4">Your cart is empty</h1>
-                    <Link href="/shop">
-                        <Button>Continue Shopping</Button>
-                    </Link>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center justify-center">
+                        <ShoppingBag className="h-16 w-16 text-gray-300 mb-4" />
+                        <h1 className="text-2xl text-gray-600 mb-4">Your cart is empty</h1>
+                        <Link href="/shop">
+                            <Button>Continue Shopping</Button>
+                        </Link>
+                    </div>
                 </div>
             </main>
         )
@@ -96,8 +99,11 @@ export default function CheckoutPage() {
         })
 
         if (result.success) {
+            toast.success("Checkout successful!")
             // Redirect to order confirmation or payment status page
             window.location.href = `/order-confirmation?orderId=${result.orderId}`
+        } else {
+            toast.error(`Checkout failed: ${result.error}`)
         }
     }
 

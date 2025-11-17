@@ -53,7 +53,7 @@ export async function validatePromotion(
             valid: true,
             promotion: {
                 id: promo.id,
-                code: promo.code,
+                code: promo.code || '',
                 discountPercentage: parseFloat(promo.discount_percentage || "0"),
             },
         }

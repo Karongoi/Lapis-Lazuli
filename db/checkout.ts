@@ -74,7 +74,7 @@ export async function getOrderById(orderId: number) {
 
 export async function updateOrderStatus(
     orderId: number,
-    status: "pending" | "paid" | "shipped" | "delivered" | "cancelled",
+    status: "pending" | "paid" | "payment_failed" | "shipped" | "delivered" | "cancelled",
 ) {
     const result = await db
         .update(orders)

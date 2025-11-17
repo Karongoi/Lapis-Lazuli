@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from "@/context/AuthContext"
 import { useState } from "react"
 import toast from "react-hot-toast"
 
@@ -19,16 +20,25 @@ export interface CheckoutData {
 }
 
 export function useCheckout() {
+    const { user } = useAuth();
+    const userId = user?.id
     const [loading, setLoading] = useState(false)
     const [checkoutRequestId, setCheckoutRequestId] = useState<string>("")
 
     const processCheckout = async (data: CheckoutData) => {
+        if (!userId) {
+            toast.error("You must be logged in to checkout")
+            return { success: false, error: "User not logged in" }
+        }
         setLoading(true)
         try {
             // Create order
             const orderResponse = await fetch("/api/orders/create", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "x-user-id": userId,
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
                     billingDetails: data.billingDetails,
                     subtotal: data.subtotal,

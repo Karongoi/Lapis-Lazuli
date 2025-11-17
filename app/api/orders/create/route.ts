@@ -1,12 +1,11 @@
-import { createOrder, createOrderItems, clearCart } from "@/db/checkout"
+import { createOrder, createOrderItems } from "@/db/checkout"
 import { validatePromotion } from "@/lib/promotionValidator"
-import { getCartWithItems, getGuestCart, getUserCart } from "@/db/cart"
+import { getUserCart } from "@/db/cart"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
     try {
         const userId = request.headers.get("x-user-id")
-        const guestId = request.headers.get("x-guest-id")
 
         const {
             billingDetails,
@@ -20,10 +19,8 @@ export async function POST(request: NextRequest) {
         let cart
         if (userId) {
             cart = await getUserCart(userId)
-        } else if (guestId) {
-            cart = await getGuestCart(guestId)
         } else {
-            return NextResponse.json({ error: "No user or guest ID provided" }, { status: 400 })
+            return NextResponse.json({ error: `No user or guest ID provided` }, { status: 400 })
         }
 
         // const cartWithItems = await getCartWithItems(cart.id)
@@ -63,9 +60,6 @@ export async function POST(request: NextRequest) {
 
         // Create order items from cart
         await createOrderItems(order.id, cart.id)
-
-        // Clear cart
-        await clearCart(cart.id)
 
         return NextResponse.json({
             orderId: order.id,
