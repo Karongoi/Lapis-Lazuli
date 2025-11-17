@@ -4,7 +4,7 @@ import { getUserOrders, getOrderWithItems } from "@/db/orders"
 export async function GET(request: NextRequest) {
     try {
         const userId = request.headers.get("x-user-id")
-        console.log("Fetching orders for user ID:", userId)
+        // console.log("Fetching orders for user ID:", userId)
 
         if (!userId) {
             return NextResponse.json(
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
         // Fetch all user orders with item counts
         const orders = await getUserOrders(userId)
-        console.log(`Found ${orders.length} orders for user ID:`, userId)
+        // console.log(`Found ${orders.length} orders for user ID:`, userId)
 
         const ordersWithItems = await Promise.all(
             orders.map(async (order) => {
@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
             })
         )
 
+        console.log("Orders with items:", ordersWithItems)
         return NextResponse.json(ordersWithItems)
     } catch (error) {
         console.error("Error fetching user orders:", error)
