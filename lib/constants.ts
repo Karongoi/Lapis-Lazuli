@@ -97,3 +97,50 @@ export function toInputDate(value: string | null) {
     const local = new Date(d.getTime() - offset * 60 * 1000)
     return local.toISOString().slice(0, 16) // "YYYY-MM-DDTHH:mm"
 }
+
+
+export const statusConfig = {
+    pending: {
+        title: "Payment Pending",
+        message: "Your payment is being processed. Please check your phone for the M-Pesa prompt.",
+        color: "bg-yellow-50",
+        textColor: "text-yellow-900",
+    },
+    paid: {
+        title: "Order Confirmed!",
+        message: "Your payment has been received. We're preparing your order.",
+        color: "bg-green-50",
+        textColor: "text-green-900",
+    },
+    payment_failed: {
+        title: "Payment Failed",
+        message: "Your payment could not be processed. Your cart items are saved. Please try again.",
+        color: "bg-red-50",
+        textColor: "text-red-900",
+        showRetry: true,
+    },
+    cancelled: {
+        title: "Order Cancelled",
+        message: "This order has been cancelled.",
+        color: "bg-gray-50",
+        textColor: "text-gray-900",
+    },
+    processing: {
+        title: "Processing",
+        message: "Your order is being prepared for shipment.",
+        color: "bg-blue-50",
+        textColor: "text-blue-900",
+    },
+    shipped: {
+        title: "Shipped!",
+        message: "Your order has been shipped. Track your package.",
+        color: "bg-blue-50",
+        textColor: "text-blue-900",
+    },
+    delivered: {
+        title: "Delivered",
+        message: "Your order has been delivered. Thank you for your purchase!",
+        color: "bg-green-50",
+        textColor: "text-green-900",
+    },
+}
