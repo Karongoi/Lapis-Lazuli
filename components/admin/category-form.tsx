@@ -5,9 +5,9 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { FormField } from "@/components/admin/form-field"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 interface CategoryFormProps {
     categoryId?: number
@@ -74,7 +74,7 @@ export function CategoryForm({ categoryId }: CategoryFormProps) {
         }
     }
 
-    if (loading) return <div className="py-8 text-center">Loading...</div>
+    if (loading) return <div className="py-8 text-center"><LoadingSkeleton /></div>
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6 w-full">

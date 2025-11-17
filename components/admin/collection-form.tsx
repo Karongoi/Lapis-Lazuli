@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { FormField } from "@/components/admin/form-field"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 interface CollectionFormProps {
     collectionId?: number
@@ -75,7 +76,7 @@ export function CollectionForm({ collectionId }: CollectionFormProps) {
         }
     }
 
-    if (loading) return <div className="py-8 text-center">Loading...</div>
+    if (loading) return <div className="py-8 text-center"><LoadingSkeleton /></div>
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">

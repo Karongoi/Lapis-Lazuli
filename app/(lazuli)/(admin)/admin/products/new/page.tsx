@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ProductForm } from "@/components/admin/product-form"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export default function NewProductPage() {
     const [collections, setCollections] = useState([])
@@ -22,7 +23,7 @@ export default function NewProductPage() {
             .finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <div className="py-8 text-center">Loading...</div>
+    if (loading) return <div className="py-8 text-center"><LoadingSkeleton /></div>
 
     return (
         <div className="space-y-6">

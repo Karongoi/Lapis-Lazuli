@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { Menu, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 
 import { CartIcon } from "@/components/ui/cart";
 import { HeartIcon } from "@/components/ui/heart";
@@ -70,7 +70,7 @@ export default function Navbar() {
     // const womenMenuItems = buildSectionsMenu("women")
     // const kidsMenuItems = buildSectionsMenu("kids")
     return (
-        <header className="relative z-50 w-full font-jost bg-background border-b border-gray-200">
+        <header className="relative z-50 w-full font-jost bg-background">
             <div className="flex items-center justify-between gap-4 p-4 md:px-8">
                 {/* Left: Logo */}
                 <Link href="/home" className="flex-shrink-0">
@@ -84,10 +84,16 @@ export default function Navbar() {
                 </Link>
 
                 {/* Middle: Desktop Menu */}
-                <nav className="hidden md:block bg-primary/10 px-6 py-2 rounded-full">
+                <nav className="hidden md:block bg-primary/20 px-6 py-2 rounded-full">
                     <ul className="flex gap-8 text-sm items-center">
+                        <li className="uppercase hover:text-secondary transition-colors">
+                            <Link href={"/shop"}>Shop</Link>
+                        </li>
                         <li>
-                            <NavDropdown label="Shop" items={shopMenuItems} />
+                            <NavDropdown label="Collections" items={collectionsMenuItems} />
+                        </li>
+                        <li>
+                            <NavDropdown label="Sections" items={shopMenuItems} />
                         </li>
 
                         {/* <li>
@@ -99,10 +105,7 @@ export default function Navbar() {
                         <li>
                             <NavDropdown label="Kids" items={kidsMenuItems} />
                         </li> */}
-                        <li>
-                            <NavDropdown label="Collections" items={collectionsMenuItems} />
-                        </li>
-                        <li className="uppercase">
+                        <li className="uppercase hover:text-secondary transition-colors">
                             <Link href="/our-story">Our Story</Link>
                         </li>
                     </ul>
@@ -117,9 +120,9 @@ export default function Navbar() {
                     >
                         <SearchIcon />
                     </button>
-                    <Link className="hover:text-secondary" href="/favorites">
+                    {/* <Link className="hover:text-secondary" href="/favorites">
                         <HeartIcon />
-                    </Link>
+                    </Link> */}
                     <Link className="relative hover:text-secondary transition-colors" href="/cart">
                         <CartIcon />
                         {cartItemCount > 0 && (
@@ -146,6 +149,9 @@ export default function Navbar() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => router.push("/account")}>
                                 <UserIcon /> Account
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push("/orders")}>
+                                <ShoppingBag /> My Orders
                             </DropdownMenuItem>
                             {user ? (
                                 <DropdownMenuItem
@@ -184,13 +190,16 @@ export default function Navbar() {
                         <X size={24} />
                     </button>
                     <ul className="flex flex-col w-full gap-4 text-sm px-4 pt-20">
-                        <li>
-                            <NavDropdown label="Shop" items={shopMenuItems} />
+                        <li className="uppercase hover:text-secondary transition-colors">
+                            <Link href={"/shop"}>Shop</Link>
                         </li>
                         <li>
                             <NavDropdown label="Collections" items={collectionsMenuItems} />
                         </li>
-                        <li className="uppercase">
+                        <li>
+                            <NavDropdown label="Sections" items={shopMenuItems} />
+                        </li>
+                        <li className="uppercase hover:text-secondary transition-colors">
                             <Link href="/our-story" onClick={() => setIsMenuOpen(false)}>
                                 Our Story
                             </Link>

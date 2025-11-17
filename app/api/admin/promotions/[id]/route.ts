@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getPromotionById, updatePromotion, deletePromotion } from "@/db/promotions"
+import { PromotionSchema } from "@/schemas/promotion"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -19,11 +20,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   try {
     const { id } = await params
     const body = await request.json()
-    const data = await updatePromotion(Number.parseInt(id), body)
+    const parsed = PromotionSchema.parse(body)
+    const data = await updatePromotion(Number.parseInt(id), parsed)
     return NextResponse.json({ success: true, data })
   } catch (error) {
     console.error("[API] PATCH /admin/promotions/[id]", error)
-    return NextResponse.json({ error: "Failed to update promotion" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to update promotion " }, { status: 500 })
   }
 }
 

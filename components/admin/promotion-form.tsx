@@ -8,6 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { FormField } from "@/components/admin/form-field"
+import { toInputDate } from "@/lib/constants"
+import toast from "react-hot-toast"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 interface PromotionFormProps {
     promotionId?: number
@@ -38,13 +41,15 @@ export function PromotionForm({ promotionId }: PromotionFormProps) {
         try {
             const res = await fetch(`/api/admin/promotions/${id}`)
             if (!res.ok) throw new Error("Failed to fetch")
+
             const { data } = await res.json()
+
             setFormData({
-                code: data.code,
-                description: data.description,
-                discount_percentage: data.discount_percentage,
-                valid_from: data.valid_from,
-                valid_until: data.valid_until,
+                code: data.code ?? "",
+                description: data.description ?? "",
+                discount_percentage: data.discount_percentage?.toString() ?? "",
+                valid_from: toInputDate(data.valid_from),
+                valid_until: toInputDate(data.valid_until),
             })
         } catch (err) {
             console.error(err)
@@ -69,7 +74,7 @@ export function PromotionForm({ promotionId }: PromotionFormProps) {
         try {
             const payload = {
                 ...formData,
-                discount_percentage: Number.parseFloat(formData.discount_percentage),
+                discount_percentage: formData.discount_percentage,
             }
             const url = isEditing ? `/api/admin/promotions/${promotionId}` : "/api/admin/promotions"
             const method = isEditing ? "PATCH" : "POST"
@@ -82,13 +87,13 @@ export function PromotionForm({ promotionId }: PromotionFormProps) {
             if (!res.ok) throw new Error("Failed to save promotion")
             router.push("/admin/promotions")
         } catch (err) {
-            alert(err instanceof Error ? err.message : "An error occurred")
+            toast.error(err instanceof Error ? err.message : "An error occurred")
         } finally {
             setSubmitting(false)
         }
     }
 
-    if (loading) return <div className="py-8 text-center">Loading...</div>
+    if (loading) return <div className="py-8 text-center"><LoadingSkeleton /></div>
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">

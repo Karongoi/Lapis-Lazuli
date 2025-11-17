@@ -7,6 +7,7 @@ import Image from 'next/image';
 import bgImage from '@/public/images/background.png'
 import toast from 'react-hot-toast';
 import { useTransition } from 'react';
+import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
     const searchParams = useSearchParams()
@@ -41,34 +42,35 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="relative flex items-center justify-center min-h-screen w-screen overflow-hidden">
+        <div className="relative flex items-center min-h-screen w-screen overflow-hidden">
             {/* Background image */}
             <Image
                 src={bgImage}
                 alt="Background"
-                fill
                 priority
-                className="object-cover opacity-70"
+                className="hidden sm:block object-cover h-screen w-full opacity-70"
             />
+            <span className='absolute left-6 bottom-6 italic'>Lapis Lazuli Threads &copy;2025</span>
 
             {/* Grain overlay (above image) */}
             <GrainOverlay />
 
             {/* Form container */}
-            <div className=" relative z-20  bg-background w-full max-w-sm md:max-w-lg p-8 md:px-12 py-12 flex flex-col gap-2 rounded-none md:absolute md:right-0 md:top-0 md:h-full md:justify-center"
+            <div
+                className="relative z-20 bg-background w-full lg:w-[45%] p-8 md:px-12 py-12 flex flex-col items-center gap-2 h-screen justify-center"
             >
                 <h1 className="text-md md:text-xl lg:text-2xl font-bold text-center">Welcome to <span className=''>Lapis Lazuli</span></h1>
                 <p className='text-center'>Sign in to your account</p>
                 <form onSubmit={handleSubmit} className="flex flex-col text-sm w-full max-w-sm mx-auto gap-5 mt-8">
-                    <input type="hidden" name="next" value={next} />
+                    <Input type="hidden" name="next" value={next} />
 
-                    <input
+                    <Input
                         type="email"
                         name="email"
                         placeholder="Enter email"
                         className="px-4 py-2 rounded-sm bg-primary-foreground border border-secondary-foreground/10"
                     />
-                    <input
+                    <Input
                         type="password"
                         name="password"
                         placeholder="Enter password"

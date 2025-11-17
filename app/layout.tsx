@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Jost } from "next/font/google";
+import { Jost } from "next/font/google";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/constants";
 import AppProvider from "./(providers)/AppProvider";
@@ -7,19 +7,19 @@ import TanstackProvider from "./(providers)/QueryProvider";
 import { GlobalRouteLoader } from "@/common/widgets/GlobalLoader";
 import { Toaster } from "react-hot-toast";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
 const jost = Jost({
   variable: "--font-jost",
   subsets: ["latin"],
 });
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jost.variable} antialiased text-foreground bg-background ${geistSans.variable} ${geistMono.variable}`}
+        className={`${jost.variable} font-jost antialiased text-foreground bg-background`}
       >
         <GlobalRouteLoader />
         <Toaster position="top-right" />

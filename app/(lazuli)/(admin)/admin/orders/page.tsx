@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DataTable } from "@/components/admin/data-table"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export default function OrdersPage() {
     const [orders, setOrders] = useState([])
@@ -42,7 +43,7 @@ export default function OrdersPage() {
                 </CardHeader>
                 <CardContent>
                     {loading ? (
-                        <div className="py-8 text-center text-muted-foreground">Loading...</div>
+                        <div className="py-8 text-center text-muted-foreground"><LoadingSkeleton /></div>
                     ) : (
                         <DataTable data={orders} columns={columns} />
                     )}

@@ -124,3 +124,36 @@ export interface ReviewsData {
     averageRating: number
     count: number
 }
+
+export interface BillingDetails {
+    fullName: string
+    email: string
+    phone: string
+    address: string
+}
+
+// ORDERS
+export interface OrderItem {
+    id: number
+    quantity: number
+    unit_price: string
+    color?: string
+    size?: string
+    sku?: string
+    product_name?: string
+    product_id?: number
+    media_url?: string
+}
+
+export interface Order {
+    id: number
+    order_number: string
+    status: "pending" | "paid" | "payment_failed" | "cancelled" | "processing" | "shipped" | "delivered"
+    tax: string
+    discount: string
+    receipt_url?: string
+    subtotal: string
+    total_price: string
+    created_at: string
+    items?: OrderItem[]
+}

@@ -10,6 +10,7 @@ import { ResponsiveFilterWrapper } from "@/common/shared/responsive-filter-wrapp
 import { SelectedFilters } from "@/common/shared/selectedFilters"
 import { ProductFull } from "@/lib/types"
 import { useAllProductDetails } from "@/hooks/useFullProducts"
+import LoadingSkeleton from "@/common/shared/loadingSkeleton"
 
 export default function SearchPage() {
     const searchParams = useSearchParams()
@@ -67,7 +68,7 @@ export default function SearchPage() {
                         </div>
 
                         {/* Results */}
-                        {isLoading && <p className="text-muted-foreground">Loading...</p>}
+                        {isLoading && <p className="text-muted-foreground"><LoadingSkeleton /></p>}
 
                         {!isLoading && results.length === 0 && (
                             <div className="text-center py-12">
