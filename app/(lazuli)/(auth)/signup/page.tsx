@@ -39,7 +39,7 @@ export default function SignupPage() {
                 src={bgImage}
                 alt="Background"
                 priority
-                className="hidden sm:block object-cover h-screen w-full opacity-70"
+                className="block object-cover h-screen w-full sm:w-2/3 opacity-70"
             />
             <span className='absolute left-6 bottom-6 italic'>Lapis Lazuli Threads &copy;2025</span>
 
@@ -48,7 +48,7 @@ export default function SignupPage() {
 
             {/* Form container */}
             <div
-                className="relative z-20 bg-background w-full lg:w-[45%] p-8 md:px-12 py-12 flex flex-col items-center gap-2 h-screen justify-center"
+                className="absolute sm:relative z-20 bg-background w-full sm:w-1/2 lg:w-[45%] p-8 md:px-12 py-12 flex flex-col items-center gap-2 h-auto sm:h-screen justify-center"
             >
                 <h1 className="text-md md:text-xl font-bold text-center">Welcome to <span className=''>Lapis Lazuli</span></h1>
                 <p className='text-center'>Create your account</p>
