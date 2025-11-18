@@ -6,6 +6,7 @@ import { FormField } from "@/components/admin/form-field"
 import toast from "react-hot-toast"
 import { BillingDetails } from "@/lib/types"
 import { Input } from "@/components/ui/input"
+import { formatKenyanPhone, validKenyanPhone } from "@/lib/constants"
 
 interface BillingFormProps {
     onSubmit: (details: BillingDetails) => void
@@ -29,9 +30,10 @@ export function BillingForm({ onSubmit, isLoading }: BillingFormProps) {
         if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
             newErrors.email = "Valid email is required"
         }
-        if (!formData.phone.match(/^0\d{9}$|^254\d{9}$/)) {
-            newErrors.phone = "Valid phone number is required"
+        if (!validKenyanPhone(formData.phone)) {
+            newErrors.phone = "Enter a valid Kenyan phone number"
         }
+
         if (!formData.address.trim()) newErrors.address = "Address is required"
 
         setErrors(newErrors)
@@ -46,13 +48,21 @@ export function BillingForm({ onSubmit, isLoading }: BillingFormProps) {
     }
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (validateForm()) {
-            onSubmit(formData)
-        } else {
-            toast.error("Please fix the errors in the form")
+        e.preventDefault();
+
+        if (!validateForm()) {
+            toast.error("Please fix the errors in the form");
+            return;
         }
-    }
+
+        const normalized = {
+            ...formData,
+            phone: formatKenyanPhone(formData.phone)
+        };
+
+        onSubmit(normalized);
+    };
+
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -64,6 +74,7 @@ export function BillingForm({ onSubmit, isLoading }: BillingFormProps) {
                 error={errors.fullName}
             >
                 <Input
+                    id="full_name"
                     type="text"
                     value={formData.fullName}
                     onChange={(e) => handleChange("fullName", e.target.value)}
@@ -77,6 +88,7 @@ export function BillingForm({ onSubmit, isLoading }: BillingFormProps) {
                 error={errors.email}
             >
                 <Input
+                    id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleChange("email", e.target.value)}
@@ -90,6 +102,7 @@ export function BillingForm({ onSubmit, isLoading }: BillingFormProps) {
                 error={errors.phone}
             >
                 <Input
+                    id="phone"
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handleChange("phone", e.target.value)}
@@ -103,6 +116,7 @@ export function BillingForm({ onSubmit, isLoading }: BillingFormProps) {
                 error={errors.address}
             >
                 <textarea
+                    id="address"
                     value={formData.address}
                     onChange={(e) => handleChange("address", e.target.value)}
                     placeholder="123 Main St, City, Country"

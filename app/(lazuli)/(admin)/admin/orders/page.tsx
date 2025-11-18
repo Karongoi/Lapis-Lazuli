@@ -3,8 +3,10 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DataTable } from "@/components/admin/data-table"
 import LoadingSkeleton from "@/common/shared/loadingSkeleton"
+import { useRouter } from "next/navigation"
 
 export default function OrdersPage() {
+    const router = useRouter()
     const [orders, setOrders] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -45,7 +47,11 @@ export default function OrdersPage() {
                     {loading ? (
                         <div className="py-8 text-center text-muted-foreground"><LoadingSkeleton /></div>
                     ) : (
-                        <DataTable data={orders} columns={columns} />
+                        <DataTable
+                            data={orders}
+                            columns={columns}
+                            onEdit={(row) => router.push(`/admin/orders/${row.id}`)}
+                        />
                     )}
                 </CardContent>
             </Card>
