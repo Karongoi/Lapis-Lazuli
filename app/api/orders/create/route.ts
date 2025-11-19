@@ -1,4 +1,4 @@
-import { createOrder, createOrderItems } from "@/db/checkout"
+import { createOrder, createOrderItems, updateOrderStatus } from "@/db/checkout"
 import { validatePromotion } from "@/lib/promotionValidator"
 import { getUserCart } from "@/db/cart"
 import { NextRequest, NextResponse } from "next/server"
@@ -61,9 +61,17 @@ export async function POST(request: NextRequest) {
         // Create order items from cart
         await createOrderItems(order.id, cart.id)
 
+        const paymentRequired = totalPrice > 0
+
+        if (!paymentRequired) {
+            await updateOrderStatus(order.id, "paid")
+        }
+
         return NextResponse.json({
             orderId: order.id,
             orderNumber: order.order_number,
+            status: paymentRequired ? order.status : "paid",
+            paymentRequired,
         })
     } catch (error) {
         console.error("Order creation error:", error)

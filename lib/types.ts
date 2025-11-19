@@ -156,4 +156,5 @@ export interface Order {
     total_price: string
     created_at: string
     items?: OrderItem[]
+    itemCount?: number
 }

@@ -167,10 +167,10 @@ export default function OrderConfirmationPage() {
                                 <span> KES {parseFloat(order.total_price).toFixed(2)}</span>
                             </div></div>
                     </div>
-                    <div className="space-y-2 flex flex-col">
-                        {statusConfig.payment_failed && order.status === "payment_failed" && (
+                    <div className="w-full flex items-center justify-center gap-8">
+                        {(order.status === "payment_failed" || order.status === "pending") && (
                             <Link href={`/checkout?retryOrder=${orderId}`}>
-                                <Button className="w-full">Retry Payment</Button>
+                                <Button variant="outline" className="w-full">Retry Payment</Button>
                             </Link>
                         )}
                         {order.status === "paid" && (
@@ -181,7 +181,7 @@ export default function OrderConfirmationPage() {
                             </Link>
                         )}
                         <Link href="/shop">
-                            <Button variant="ghost" className="w-full">
+                            <Button className="w-full">
                                 Continue Shopping
                             </Button>
                         </Link>
