@@ -1,10 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getOrderById, updateOrderStatus } from "@/db/orders"
+import { getOrderWithItems, updateOrderStatus } from "@/db/orders"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await params
-        const data = await getOrderById(Number.parseInt(id))
+        const data = await getOrderWithItems(Number.parseInt(id))
         if (!data) {
             return NextResponse.json({ error: "Order not found" }, { status: 404 })
         }
