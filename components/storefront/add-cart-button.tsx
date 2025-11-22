@@ -24,6 +24,10 @@ export function AddToCartButton({ variantId, variantName, stock, disabled = fals
             return
         }
 
+        if (quantity > stock) {
+            toast.error(`Only ${stock} units available for ${variantName}`)
+            return
+        }
         try {
             setIsAdding(true)
             await addItem(variantId, quantity)
