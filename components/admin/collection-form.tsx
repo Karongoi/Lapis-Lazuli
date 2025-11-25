@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -10,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { FormField } from "@/components/admin/form-field"
 import LoadingSkeleton from "@/common/shared/loadingSkeleton"
+import { CloudinaryUpload } from "./upload-form"
 
 interface CollectionFormProps {
     collectionId?: number
@@ -21,6 +21,7 @@ export function CollectionForm({ collectionId }: CollectionFormProps) {
     const [loading, setLoading] = useState(isEditing)
     const [submitting, setSubmitting] = useState(false)
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const [image, setImage] = useState<string>('')
 
     const [formData, setFormData] = useState({
         name: "",
@@ -85,6 +86,19 @@ export function CollectionForm({ collectionId }: CollectionFormProps) {
                     <CardTitle>{isEditing ? "Edit Collection" : "Create New Collection"}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    <FormField label="Collection Image" >
+                        <CloudinaryUpload
+                            folder="collections"
+                            onUploadComplete={(url) =>
+                                setImage(url)
+                            }
+                        />
+                        <Input
+                            placeholder="Media URL"
+                            value={image}
+                            onChange={(e) => setImage(e.target.value)}
+                        />
+                    </FormField>
                     <FormField label="Collection Name" required error={errors.name}>
                         <Input
                             value={formData.name}
