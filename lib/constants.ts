@@ -177,3 +177,17 @@ export const formatKenyanPhone = (phone: string) => {
         throw new Error("Invalid Kenyan phone number format");
     }
 };
+
+export function formatDate(date?: string | null, options?: Intl.DateTimeFormatOptions): string {
+    if (!date) return "-"
+    try {
+        return new Date(date).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            ...options,
+        })
+    } catch {
+        return "-"
+    }
+}

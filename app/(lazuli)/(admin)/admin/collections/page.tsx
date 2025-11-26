@@ -55,7 +55,7 @@ export default function CollectionsPage() {
                     ) : (
                         <div className="space-y-4">
                             {collections.map((collection: any) => (
-                                <div key={collection.id} className="flex items-center justify-between rounded-lg border p-4">
+                                <div key={collection.id} className="flex items-center justify-between border-b p-4">
                                     <div>
                                         <h3 className="font-semibold">{collection.name}</h3>
                                         <p className="text-sm text-muted-foreground">{collection.description}</p>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useFetchCategories } from "@/hooks/useStore"
 import LoadingSkeleton from "@/common/shared/loadingSkeleton"
+import { EditIcon, TrashIcon } from "lucide-react"
 
 export default function CategoriesPage() {
     const { categories, isCategoriesLoading } = useFetchCategories()
@@ -36,7 +37,7 @@ export default function CategoriesPage() {
                     {isCategoriesLoading ? (
                         <div className="py-8 text-center text-muted-foreground"><LoadingSkeleton /></div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {categories.map((category: any) => (
                                 <div key={category.id} className="flex items-center justify-between rounded-lg border p-4">
                                     <div>
@@ -45,12 +46,12 @@ export default function CategoriesPage() {
                                     </div>
                                     <div className="flex gap-2">
                                         <Link href={`/admin/categories/${category.id}`}>
-                                            <Button variant="outline" size="sm">
-                                                Edit
+                                            <Button variant="ghost" size="sm" >
+                                                <EditIcon className="h-4 w-4 text-secondary" />
                                             </Button>
                                         </Link>
-                                        <Button variant="destructive" size="sm" onClick={() => handleDelete(category.id)}>
-                                            Delete
+                                        <Button variant="ghost" size="sm" onClick={() => handleDelete(category.id)}>
+                                            <TrashIcon className="h-4 w-4 text-destructive" />
                                         </Button>
                                     </div>
                                 </div>
