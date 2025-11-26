@@ -119,7 +119,7 @@ export default function HeroCarousel() {
                 >
                     {/* Text Section */}
                     <div className="text-left my-auto md:my-0 max-w-xl space-y-6">
-                        <h1 className="text-lg md:text-xl uppercase text-white drop-shadow-lg">
+                        <h1 className="text-lg md:text-xl lg:text-2xl uppercase text-white drop-shadow-lg">
                             {slides[current]?.title || "Featured Product"}
                         </h1>
                         <p className="text-gray-100">

@@ -44,7 +44,7 @@ export function CloudinaryUpload({ folder, onUploadComplete }: CloudinaryUploadP
     return (
         <div className="flex items-center gap-2">
             <Input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} />
-            <Button type="button" disabled={uploading}>
+            <Button size={'lg'} type="button" disabled={uploading}>
                 {uploading ? "Uploading..." : "Upload"}
             </Button>
         </div>
