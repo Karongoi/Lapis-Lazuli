@@ -18,8 +18,14 @@ export function CartItems({ items, onUpdateQuantity, onRemoveItem }: CartItemsPr
     const [updatingId, setUpdatingId] = useState<number | null>(null)
     console.log('CartItems items', items)
 
-    const handleUpdateQuantity = async (itemId: number, newQuantity: number) => {
+    const handleUpdateQuantity = async (itemId: number, newQuantity: number, stock: number) => {
         if (newQuantity < 1) return
+
+        // enforce max stock
+        if (newQuantity > stock) {
+            toast.error(`Only ${stock} units available`)
+            return
+        }
         setUpdatingId(itemId)
         try {
             await onUpdateQuantity(itemId, newQuantity)
@@ -91,28 +97,28 @@ export function CartItems({ items, onUpdateQuantity, onRemoveItem }: CartItemsPr
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row justify-between md:justify-evenly items-start md:items-center gap-2 w-full">
-                                {/* Price */}
-                                <p className="font-semibold mt-2 md:mt-0">KES {Number.parseFloat(item.variant.price).toFixed(2)}</p>
+                                    {/* Price */}
+                                    <p className="font-semibold mt-2 md:mt-0">KES {Number.parseFloat(item.variant.price).toFixed(2)}</p>
 
-                                {/* Quantity */}
-                                <div className="flex items-center border border-border">
-                                    <button
-                                        onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                                        className="px-3 py-1 hover:bg-gray-100 border-r transition-colors"
-                                        disabled={item.quantity <= 1 || updatingId === item.id}
-                                    >
-                                        <Minus size={16} />
-                                    </button>
-                                    <span className="px-4 py-1 font-semibold">{item.quantity}</span>
-                                    <button
-                                        onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                                        className="px-3 py-1 hover:bg-gray-100 border-l transition-colors"
-                                        disabled={item.quantity >= item.variant.stock || updatingId === item.id}
-                                    >
-                                        <Plus size={16} />
-                                    </button>
-                                </div>
-                                {/* Total Price */}
+                                    {/* Quantity */}
+                                    <div className="flex items-center border border-border">
+                                        <button
+                                            onClick={() => handleUpdateQuantity(item.id, item.quantity - 1, item.variant.stock)}
+                                            className="px-3 py-1 hover:bg-gray-100 border-r transition-colors"
+                                            disabled={item.quantity <= 1 || updatingId === item.id}
+                                        >
+                                            <Minus size={16} />
+                                        </button>
+                                        <span className="px-4 py-1 font-semibold">{item.quantity}</span>
+                                        <button
+                                            onClick={() => handleUpdateQuantity(item.id, item.quantity + 1, item.variant.stock)}
+                                            className="px-3 py-1 hover:bg-gray-100 border-l transition-colors disabled:text-muted-foreground"
+                                            disabled={item.quantity >= item.variant.stock || updatingId === item.id}
+                                        >
+                                            <Plus size={16} />
+                                        </button>
+                                    </div>
+                                    {/* Total Price */}
                                     <p className="font-semibold">KES {Number.parseFloat((Number.parseFloat(item.variant.price) * item.quantity).toFixed(2))}</p>
                                 </div>
                             </div>

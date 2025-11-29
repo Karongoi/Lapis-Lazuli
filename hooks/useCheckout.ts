@@ -3,6 +3,7 @@
 import { useAuth } from "@/context/AuthContext"
 import { useState } from "react"
 import toast from "react-hot-toast"
+import { saveRetryOrder } from "@/lib/retryCheckoutStorage"
 
 export interface CheckoutData {
     billingDetails: {
@@ -13,6 +14,7 @@ export interface CheckoutData {
     }
     paymentMethod: "mpesa" | "card"
     promotionCode?: string
+    existingOrderId?: number
     subtotal: number
     discount: number
     tax: number
@@ -32,31 +34,59 @@ export function useCheckout() {
         }
         setLoading(true)
         try {
-            // Create order
-            const orderResponse = await fetch("/api/orders/create", {
-                method: "POST",
-                headers: {
-                    "x-user-id": userId,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    billingDetails: data.billingDetails,
-                    subtotal: data.subtotal,
-                    discount: data.discount,
-                    tax: data.tax,
-                    totalPrice: data.total,
-                    promotionCode: data.promotionCode,
-                }),
-            })
+            let orderId = data.existingOrderId
+            let paymentRequired = data.total > 0
+            let orderStatus: string | undefined
 
-            if (!orderResponse.ok) {
-                throw new Error("Failed to create order")
+            if (!orderId) {
+                const orderResponse = await fetch("/api/orders/create", {
+                    method: "POST",
+                    headers: {
+                        "x-user-id": userId,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        billingDetails: data.billingDetails,
+                        subtotal: data.subtotal,
+                        discount: data.discount,
+                        tax: data.tax,
+                        totalPrice: data.total,
+                        promotionCode: data.promotionCode,
+                    }),
+                })
+
+                if (!orderResponse.ok) {
+                    throw new Error("Failed to create order")
+                }
+
+                const orderData = await orderResponse.json()
+                orderId = orderData.orderId
+                paymentRequired = orderData.paymentRequired ?? paymentRequired
+                orderStatus = orderData.status
             }
 
-            const orderData = await orderResponse.json()
-            const orderId = orderData.orderId
+            if (!orderId) {
+                throw new Error("Unable to determine order ID")
+            }
 
-            // Process payment based on method
+            if (!paymentRequired || data.total <= 0) {
+                toast.success("Order completed. No payment required.")
+                return {
+                    success: true,
+                    orderId,
+                    status: orderStatus ?? "paid",
+                    paymentRequired: false,
+                }
+            }
+
+            saveRetryOrder({
+                orderId,
+                billingDetails: data.billingDetails,
+                promotionCode: data.promotionCode,
+                paymentMethod: data.paymentMethod,
+                savedAt: Date.now(),
+            })
+
             if (data.paymentMethod === "mpesa") {
                 const paymentResponse = await fetch("/api/payments/mpesa", {
                     method: "POST",
@@ -81,11 +111,13 @@ export function useCheckout() {
                     success: true,
                     orderId,
                     checkoutRequestId: paymentData.CheckoutRequestID,
+                    paymentRequired: true,
+                    status: orderStatus ?? "pending",
                 }
             }
 
             toast.success("Order created successfully")
-            return { success: true, orderId }
+            return { success: true, orderId, paymentRequired: true, status: orderStatus ?? "pending" }
         } catch (error) {
             const message = error instanceof Error ? error.message : "Checkout failed"
             toast.error(message)

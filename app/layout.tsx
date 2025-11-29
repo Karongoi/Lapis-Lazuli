@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Jost } from "next/font/google";
+import { Josefin_Sans, Jost } from "next/font/google";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/constants";
 import AppProvider from "./(providers)/AppProvider";
@@ -14,6 +14,11 @@ import { Toaster } from "react-hot-toast";
 
 const jost = Jost({
   variable: "--font-jost",
+  subsets: ["latin"],
+});
+
+const josefinSans = Josefin_Sans({
+  variable: "--font-josefin-sans",
   subsets: ["latin"],
 });
 // const geistMono = Geist_Mono({
@@ -46,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jost.variable} font-jost antialiased text-foreground bg-background`}
+        className={`${jost.variable} ${josefinSans.variable} font-jost font-josefin-sans antialiased text-foreground bg-background`}
       >
         <GlobalRouteLoader />
         <Toaster position="top-right" />

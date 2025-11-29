@@ -144,3 +144,50 @@ export const statusConfig = {
         textColor: "text-green-900",
     },
 }
+
+export const validKenyanPhone = (phone: string) => {
+    const cleaned = phone.replace(/[\s-]/g, ""); // Remove spaces/dashes
+
+    // +254xxxxxxxxx
+    if (/^\+254\d{9}$/.test(cleaned)) return true;
+
+    // 254xxxxxxxxx
+    if (/^254\d{9}$/.test(cleaned)) return true;
+
+    // 07xxxxxxxx
+    if (/^0\d{9}$/.test(cleaned)) return true;
+
+    // 7xxxxxxxx
+    if (/^\d{9}$/.test(cleaned)) return true;
+
+    return false;
+};
+
+export const formatKenyanPhone = (phone: string) => {
+    let cleaned = phone.replace(/[\s-]/g, ""); // Remove spaces/dashes
+    if (cleaned.startsWith("+254")) {
+        return cleaned;
+    } else if (cleaned.startsWith("254")) {
+        return `+${cleaned}`;
+    } else if (cleaned.startsWith("0")) {
+        return `+254${cleaned.slice(1)}`;
+    } else if (/^\d{9}$/.test(cleaned)) {
+        return `+254${cleaned}`;
+    } else {
+        throw new Error("Invalid Kenyan phone number format");
+    }
+};
+
+export function formatDate(date?: string | null, options?: Intl.DateTimeFormatOptions): string {
+    if (!date) return "-"
+    try {
+        return new Date(date).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            ...options,
+        })
+    } catch {
+        return "-"
+    }
+}

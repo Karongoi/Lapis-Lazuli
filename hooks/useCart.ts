@@ -25,32 +25,31 @@ export function useCart() {
 
     // Fetch cart
     const fetchCart = useCallback(async () => {
-        if (!guestId) return
+        if (!guestId && !user?.id) return
+
         try {
             setLoading(true)
-            const userId = user?.id
             const response = await fetch("/api/cart", {
                 headers: {
-                    "x-user-id": userId || "",
-                    "x-guest-id": guestId,
+                    "x-user-id": user?.id || "",
+                    "x-guest-id": guestId || "",
                 },
             })
+
             if (response.ok) {
                 const data = await response.json()
                 setCart(data.data)
             }
-        } catch (error) {
-            console.error("Failed to fetch cart:", error)
         } finally {
             setLoading(false)
         }
-    }, [guestId])
+    }, [guestId, user?.id])
 
     // Add to cart
     const addItem = useCallback(
         async (variantId: number, quantity: number) => {
             try {
-                const userId =  user?.id
+                const userId = user?.id
                 const response = await fetch("/api/cart", {
                     method: "POST",
                     headers: {
@@ -109,30 +108,38 @@ export function useCart() {
     )
 
     // Migrate cart on login
-    const migrateCart = useCallback(
-        async (userId: string) => {
-            try {
-                await fetch("/api/cart/migrate", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ guestId, userId }),
-                })
-                localStorage.setItem("user_id", userId)
-                await fetchCart()
-            } catch (error) {
-                console.error("Failed to migrate cart:", error)
-            }
-        },
-        [guestId, fetchCart],
-    )
+    const migrateCart = useCallback(async (userId: string) => {
+        try {
+            await fetch("/api/cart/migrate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ guestId, userId }),
+            })
+
+            // clear guest ID after successful merge
+            localStorage.removeItem("guest_id")
+            setGuestId("")  // so future requests use userId only
+
+            // refetch cart now as user cart
+            await fetchCart()
+        } catch (error) {
+            console.error("Failed to migrate cart:", error)
+        }
+    }, [guestId, fetchCart])
 
     useEffect(() => {
         if (guestId) {
             fetchCart()
         }
     }, [guestId, fetchCart])
+
+    useEffect(() => {
+        if (user && !guestId) return // already migrated
+
+        if (user?.id && guestId) {
+            migrateCart(user.id)
+        }
+    }, [user?.id, guestId])
 
     return {
         cart,

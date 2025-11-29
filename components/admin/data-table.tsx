@@ -9,7 +9,7 @@ interface Column {
     key: string
     label: string
     width?: number
-    render?: (value: any) => React.ReactNode
+    render?: (value: any, row?: any) => React.ReactNode
 }
 
 interface DataTableProps {
@@ -17,16 +17,15 @@ interface DataTableProps {
     columns: Column[]
     onEdit?: (row: any) => void
     onDelete?: (row: any) => void
+    rowClassName?: (row: any) => string
 }
 
-export function DataTable({ data, columns, onEdit, onDelete }: DataTableProps) {
-    const formatValue = (value: any, column: Column) => {
-        if (column.render) return column.render(value)
-
+export function DataTable({ data, columns, onEdit, onDelete, rowClassName }: DataTableProps) {
+    const formatValue = (value: any, column: Column, row?: any) => {
+        if (column.render) return column.render(value, row)  // pass row too
         if (value === null || value === undefined) return "-"
         if (column.key.includes("price") || column.key.includes("discount")) return `KES ${Number(value).toFixed(2)}`
         if (column.key.includes("date") || column.key.includes("created")) return new Date(value).toLocaleDateString()
-
         return String(value)
     }
 
@@ -45,9 +44,9 @@ export function DataTable({ data, columns, onEdit, onDelete }: DataTableProps) {
                 </TableHeader>
                 <TableBody>
                     {data.map((row, idx) => (
-                        <TableRow key={idx}>
+                        <TableRow key={idx} className={rowClassName?.(row)}>
                             {columns.map((column) => (
-                                <TableCell key={column.key}>{formatValue(row[column.key], column)}</TableCell>
+                                <TableCell key={column.key}>{formatValue(row[column.key], column, row)}</TableCell>
                             ))}
                             {(onEdit || onDelete) && (
                                 <TableCell>
