@@ -51,7 +51,7 @@ export default function CollectionPage() {
                 <Breadcrumb
                     className="ml-10 capitalize"
                     items={[
-                        { label: "Home", href: "/home" },
+                        { label: "Home", href: "/" },
                         { label: "Shop", href: "/shop" },
                         { label: `${collectionData?.name ? collectionData.name : collectionSlug?.toString()}` },
                     ]}

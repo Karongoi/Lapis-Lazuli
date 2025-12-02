@@ -47,7 +47,7 @@ export async function updateSession(request: NextRequest) {
     // --- Redirect authenticated users away from auth pages ---
     if (authRoutes.some(route => pathname.startsWith(route)) && user) {
         const url = request.nextUrl.clone()
-        url.pathname = '/home'
+        url.pathname = '/'
         return NextResponse.redirect(url)
     }
 
@@ -81,7 +81,7 @@ export async function updateSession(request: NextRequest) {
 
         // Restrict access to /admin if not admin
         if (pathname.startsWith('/admin') && role !== 'admin') {
-            return NextResponse.redirect(new URL('/home', request.url))
+            return NextResponse.redirect(new URL('/', request.url))
         }
     }
 

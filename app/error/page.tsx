@@ -7,7 +7,7 @@ export default function ErrorPage() {
             <p className="text-lg text-muted-foreground mb-6">
                 An unexpected error has occurred. Please try again later.
             </p>
-            <a href="/home" className="text-white bg-primary hover:bg-secondary px-4 py-2 rounded-sm">
+            <a href="/" className="text-white bg-primary hover:bg-secondary px-4 py-2 rounded-sm">
                 Go back to Home
             </a>
         </div>

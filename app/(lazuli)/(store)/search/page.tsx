@@ -50,7 +50,7 @@ export default function SearchPage() {
             <Breadcrumb
                 className="ml-10"
                 items={[
-                    { label: "Home", href: "/home" },
+                    { label: "Home", href: "/" },
                     { label: "Search" },
                 ]}
             />

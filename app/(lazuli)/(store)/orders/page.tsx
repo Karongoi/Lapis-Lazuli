@@ -99,7 +99,7 @@ export default function OrdersPage() {
                         <Breadcrumb
                             className="capitalize"
                             items={[
-                                { label: "Home", href: "/home" },
+                                { label: "Home", href: "/" },
                                 { label: "Orders" },
                             ]}
                         />
@@ -142,7 +142,7 @@ export default function OrdersPage() {
                     <Breadcrumb
                         className="capitalize"
                         items={[
-                            { label: "Home", href: "/home" },
+                            { label: "Home", href: "/" },
                             { label: "Orders" },
                         ]}
                     />

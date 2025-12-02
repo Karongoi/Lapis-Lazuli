@@ -37,7 +37,7 @@ export default function ShopPage() {
             <Breadcrumb
                 className="ml-8 px-4 pt-4 "
                 items={[
-                    { label: "Home", href: "/home" },
+                    { label: "Home", href: "/" },
                     { label: "Shop" },
                 ]}
             />

@@ -117,7 +117,7 @@ export default function OrderConfirmationPage() {
                     <Breadcrumb
                         className="capitalize"
                         items={[
-                            { label: "Home", href: "/home" },
+                            { label: "Home", href: "/" },
                             { label: "Orders", href: "/orders" },
                             { label: `${order?.order_number} ` },
                         ]}
