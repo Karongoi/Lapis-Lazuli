@@ -33,7 +33,7 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
             ? items.find((item) => item.label === hoveredItem)?.items || []
             : []
 
-    // ---------- DESKTOP VIEW ----------
+    // Desktop view
     if (!isMobile) {
         return (
             <div
@@ -50,8 +50,7 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
                 </button>
 
                 {isOpen && (
-                    <div className="absolute left-0 mt-0 bg-card z-50 flex">
-                        {/* Left column */}
+                    <div className="absolute left-0 mt-1 bg-card z-50 flex">
                         <div className="w-48 py-2 border-r border-border">
                             {items.map((item) => (
                                 <Link
@@ -61,8 +60,8 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
                                         item.items?.length ? setHoveredItem(item.label) : null
                                     }
                                     className={`w-full px-4 py-2 text-left text-sm flex items-center justify-between transition-colors ${hoveredItem === item.label
-                                            ? "bg-muted text-foreground"
-                                            : "hover:bg-muted text-muted-foreground"
+                                            ? "text-secondary"
+                                            : "hover:bg-muted text-foreground"
                                         }`}
                                 >
                                     {item.label}
@@ -73,7 +72,6 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
                             ))}
                         </div>
 
-                        {/* Right column */}
                         {currentSubitems.length > 0 && (
                             <div className="w-56 py-2 px-4">
                                 <div className="space-y-1">
@@ -81,7 +79,7 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
                                         <Link
                                             key={subitem.label}
                                             href={subitem.href || "#"}
-                                            className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
+                                            className="block px-3 py-2 text-sm text-muted-foreground hover:text-secondary hover:bg-muted rounded transition-colors"
                                         >
                                             {subitem.label}
                                         </Link>
@@ -95,7 +93,7 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
         )
     }
 
-    // ---------- MOBILE VIEW ----------
+    // Mobile view
     return (
         <div className="w-full text-center">
             <button
@@ -111,7 +109,7 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
             </button>
 
             {isOpen && (
-                <div className="flex flex-col bg-card/70 border-b border-border text-left">
+                <div className="flex flex-col border-b border-border text-left cursor-pointer">
                     {items.map((item) => (
                         <div key={item.label} className="flex flex-col">
                             {item.items && item.items.length > 0 ? (
