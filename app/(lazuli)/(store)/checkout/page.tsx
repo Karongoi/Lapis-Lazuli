@@ -23,7 +23,6 @@ export default function CheckoutPage() {
     const searchParams = useSearchParams()
     const retryOrderId = searchParams.get("retryOrder")
     const isRetryFlow = Boolean(retryOrderId)
-
     const { cart, loading } = useCart()
     const { processCheckout, loading: processingCheckout } = useCheckout()
     const [mounted, setMounted] = useState(false)
@@ -33,7 +32,7 @@ export default function CheckoutPage() {
     const [promotionCode, setPromotionCode] = useState("")
     const [retryPayload, setRetryPayload] = useState<RetryOrderPayload | null>(null)
 
-    // ⭐ Correct usage — Fetch order using React Query
+    // Fetch order using React Query
     const {
         data: retryOrder,
         error: retryError,
@@ -134,7 +133,7 @@ export default function CheckoutPage() {
                     <Breadcrumb
                         className="capitalize"
                         items={[
-                            { label: "Home", href: "/home" },
+                            { label: "Home", href: "/" },
                             { label: "Shop", href: "/shop" },
                             { label: 'Cart', href: '/cart' },
                             { label: 'Checkout' }

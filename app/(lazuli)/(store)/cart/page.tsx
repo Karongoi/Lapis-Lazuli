@@ -43,7 +43,7 @@ export default function CartPage() {
                         <Breadcrumb
                             className="capitalize"
                             items={[
-                                { label: "Home", href: "/home" },
+                                { label: "Home", href: "/" },
                                 { label: "Shop", href: "/shop" },
                                 { label: 'Cart' },
                             ]}
@@ -101,7 +101,7 @@ export default function CartPage() {
                     <Breadcrumb
                         className="capitalize"
                         items={[
-                            { label: "Home", href: "/home" },
+                            { label: "Home", href: "/" },
                             { label: "Shop", href: "/shop" },
                             { label: 'Cart' },
                         ]}

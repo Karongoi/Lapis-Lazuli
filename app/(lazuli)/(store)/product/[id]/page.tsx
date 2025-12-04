@@ -32,7 +32,7 @@ export default function ProductPage() {
                 <Breadcrumb
                     className="ml-10 capitalize"
                     items={[
-                        { label: "Home", href: "/home" },
+                        { label: "Home", href: "/" },
                         { label: "Shop", href: "/shop" },
                         { label: `${product?.name ? product.name : 'Product'}` },
                     ]}

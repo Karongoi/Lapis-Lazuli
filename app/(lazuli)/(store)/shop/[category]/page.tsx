@@ -51,7 +51,7 @@ export default function ShopCategoriesPage() {
                 <Breadcrumb
                     className="ml-10 capitalize"
                     items={[
-                        { label: "Home", href: "/home" },
+                        { label: "Home", href: "/" },
                         { label: "Shop", href: "/shop" },
                         { label: `${categoryData?.name ? categoryData.name : categorySlug?.toString()}` },
                     ]}

@@ -20,11 +20,11 @@ export default function CategorySectionPage() {
     // Find products where the product section's category matches the param
     const filteredProducts = useMemo(() => {
         return products.filter(
-        (product: ProductFull) => {
-            const sectionMatch = product.category?.gender?.toLowerCase().includes(sectionSlug?.toLowerCase() || "");
-            const categoryMatch = product.category?.name?.toLowerCase().includes(shopCategory?.toLowerCase() || "");
-            return sectionMatch && categoryMatch;
-        }
+            (product: ProductFull) => {
+                const sectionMatch = product.category?.gender?.toLowerCase().includes(sectionSlug?.toLowerCase() || "");
+                const categoryMatch = product.category?.name?.toLowerCase().includes(shopCategory?.toLowerCase() || "");
+                return sectionMatch && categoryMatch;
+            }
         );
     }, [products, shopCategory, sectionSlug]);
 
@@ -60,7 +60,7 @@ export default function CategorySectionPage() {
                 <Breadcrumb
                     className="ml-10 capitalize"
                     items={[
-                        { label: "Home", href: "/home" },
+                        { label: "Home", href: "/" },
                         { label: "Shop", href: "/shop" },
                         { label: `${sectionData?.name ? sectionData.name : shopCategory?.toString()}`, href: `/shop/${shopCategory}` },
                         { label: `${sectionSlug?.toString()}` },

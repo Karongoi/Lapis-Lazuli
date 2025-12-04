@@ -20,11 +20,11 @@ export default function CollectionCategoryPage() {
     // Find products where the product collection's category matches the param
     const filteredProducts = useMemo(() => {
         return products.filter(
-        (product: ProductFull) => {
-            const collectionMatch = product.collection?.name?.toLowerCase().includes(collectionSlug?.toLowerCase() || "");
-            const categoryMatch = product.category?.name?.toLowerCase().includes(collectionCategory?.toLowerCase() || "");
-            return collectionMatch && categoryMatch;
-        }
+            (product: ProductFull) => {
+                const collectionMatch = product.collection?.name?.toLowerCase().includes(collectionSlug?.toLowerCase() || "");
+                const categoryMatch = product.category?.name?.toLowerCase().includes(collectionCategory?.toLowerCase() || "");
+                return collectionMatch && categoryMatch;
+            }
         );
     }, [products, collectionCategory, collectionSlug]);
 
@@ -60,7 +60,7 @@ export default function CollectionCategoryPage() {
                 <Breadcrumb
                     className="ml-10 capitalize"
                     items={[
-                        { label: "Home", href: "/home" },
+                        { label: "Home", href: "/" },
                         { label: "Shop", href: "/shop" },
                         { label: `${collectionData?.name ? collectionData.name : collectionCategory?.toString()}`, href: `/collections/${collectionSlug}` },
                         { label: `${collectionCategory?.toString()}` },

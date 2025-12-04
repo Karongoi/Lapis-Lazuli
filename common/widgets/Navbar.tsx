@@ -73,7 +73,7 @@ export default function Navbar() {
         <header className="relative z-50 w-full font-jost bg-background">
             <div className="flex items-center justify-between gap-4 p-4 md:px-8">
                 {/* Left: Logo */}
-                <Link href="/home" className="flex-shrink-0">
+                <Link href="/" className="flex-shrink-0">
                     <Image
                         className="dark:invert"
                         src="/logo.png"
@@ -182,9 +182,9 @@ export default function Navbar() {
 
             {/* Mobile Menu Drawer */}
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-white/90 backdrop-blur-lg w-1/2 ml-auto flex flex-col justify-start items-start gap-8 text-lg font-medium text-gray-800 animate-in fade-in slide-in-from-top duration-300 md:hidden">
+                <div className="fixed inset-0 bg-background backdrop-blur-lg w-1/2 ml-auto flex flex-col justify-start items-start gap-8 text-lg font-medium text-gray-800 animate-in fade-in slide-in-from-top duration-300 md:hidden">
                     <button
-                        className="absolute top-6 right-6 p-2 rounded-full bg-gray-200/60 hover:bg-gray-300"
+                        className="absolute top-6 right-6 p-2 rounded-full hover:text-secondary transition-colors"
                         onClick={() => setIsMenuOpen(false)}
                     >
                         <X size={24} />
