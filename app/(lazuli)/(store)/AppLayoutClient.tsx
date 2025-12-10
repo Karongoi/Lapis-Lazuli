@@ -1,6 +1,7 @@
 'use client'
 
 import Loading from "@/app/loading"
+import Footer from "@/common/widgets/Footer"
 import Navbar from "@/common/widgets/Navbar"
 
 
@@ -17,7 +18,8 @@ export default function AppLayoutClient({
             <div className="transition-all duration-500 ease-in-out">
                 <Navbar />
             </div>
-                {children}
+            {children}
+            <Footer />
         </div>
     )
 }

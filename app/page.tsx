@@ -1,3 +1,4 @@
+import Footer from '@/common/widgets/Footer'
 import Navbar from '@/common/widgets/Navbar'
 import HeroCarousel from '@/components/HeroCarousel'
 import React from 'react'
@@ -9,6 +10,7 @@ export default async function HomePage() {
                 <Navbar />
             </div>
             <HeroCarousel />
+            <Footer />
         </div>
     )
 }

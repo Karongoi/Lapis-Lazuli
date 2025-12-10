@@ -78,8 +78,8 @@ export default function Navbar() {
                         className="dark:invert"
                         src="/logo.png"
                         alt="Lapis Lazuli Threads Logo"
-                        width={160}
-                        height={38}
+                        width={200}
+                        height={40}
                     />
                 </Link>
 
