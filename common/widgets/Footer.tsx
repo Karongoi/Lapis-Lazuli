@@ -9,7 +9,7 @@ export default function Footer() {
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 items-start gap-8 p-8'>
                 <div className="flex flex-col items-start justify-start gap-2 md:gap-8 md:pl-8">
                     {/* Left: Logo */}
-                    <Link href="/" className="flex-shrink-0 h-12 w-full">
+                    <Link href="/" className="flex-shrink-0 h-auto md:h-12 w-full">
                         <Image
                             src="/logo.png"
                             alt="Lapis Lazuli Threads Logo"
@@ -32,7 +32,7 @@ export default function Footer() {
                         </Link>
                     </div>
                 </div>
-                <div className='flex flex-col items-center justify-start gap-2'>
+                <div className='flex flex-col items-start md:items-center justify-start gap-2'>
                     <h3 className="font-semibold mb-2 uppercase">Company</h3>
                     <Link className="hover:text-secondary" href={'our-story'}> Our Story</Link>
                     <Link className="hover:text-secondary" href={'size-guide'}> Size Guide</Link>
@@ -44,7 +44,7 @@ export default function Footer() {
                     <Link className="hover:text-secondary" href={'shipping'}>Shipping & Delivery</Link>
                     <Link className="hover:text-secondary" href={'return-policy'}>Return & Refund Policy</Link>
                     <Link className="hover:text-secondary" href={'terms-and-conditions'}>Terms & Conditions</Link>
-                    <Link className="hover:text-secondary" href={'privacy policy'}>Privacy Policy</Link>
+                    <Link className="hover:text-secondary" href={'privacy-policy'}>Privacy Policy</Link>
                 </div>
                 <div className='flex flex-col items-start justify-start gap-2'>
                     <h3 className="font-semibold mb-2 uppercase">GET IN TOUCH</h3>
